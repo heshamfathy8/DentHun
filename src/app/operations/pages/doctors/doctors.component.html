@@ -1,0 +1,20 @@
+<p-table [value]="products" selectionMode="single" stripedRows [tableStyle]="{'min-width': '50rem'}">
+    <ng-template #header>
+        <tr>
+            <th>Name</th>
+            <th>Adress</th>
+            <th>City</th>
+            <th>Phone</th>
+            <th>Total</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-product>
+        <tr routerLink="/operations/doctor-details"  >
+            <td >{{product.name}}</td>
+            <td class="text-muted-color">{{product.address}}</td>
+            <td class="text-muted-color">{{product.city}}</td>
+            <td class="text-muted-color">{{product.phone}}</td>
+            <td class="text-lg font-bold">{{product.total}}</td>
+        </tr>
+    </ng-template>
+</p-table>

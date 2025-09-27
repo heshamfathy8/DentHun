@@ -1,0 +1,46 @@
+<div class="flex card gap-2" #center id="center">
+  <p-iconfield>
+      <p-inputicon>
+          <i class="pi pi-search"></i>
+      </p-inputicon>
+      <input pInputText placeholder="Search" />
+  </p-iconfield>
+
+  <p-select [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Categories" class="w-full md:w-56">
+      <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2">
+          
+              <div>{{ selectedOption.name }}</div>
+          </div>
+      </ng-template>
+      <ng-template let-country #item>
+          <div class="flex items-center gap-2">
+              <div>{{ country.name }}</div>
+          </div>
+      </ng-template>
+  </p-select>
+
+  <p-select [options]="countries" [(ngModel)]="sorted" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Sort" class="w-full md:w-56">
+      <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2">
+          
+              <div>{{ selectedOption.name }}</div>
+          </div>
+      </ng-template>
+      <ng-template let-country #item>
+          <div class="flex items-center gap-2">
+              <div>{{ country.name }}</div>
+          </div>
+      </ng-template>
+  </p-select>
+
+  <p-button label="Export" class="ml-auto" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
+</div>
+
+
+
+<app-package
+#Package
+[Update]="true"
+[Delete]="true"
+></app-package>

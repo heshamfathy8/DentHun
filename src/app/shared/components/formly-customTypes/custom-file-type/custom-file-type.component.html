@@ -1,0 +1,38 @@
+<ng-container *ngIf="typeof control.value === 'string' && control.value; else uploadBlock">
+  <a 
+    [href]="getFileUrl()" 
+    target="_blank" 
+    class="text-blue-600 underline"
+  >
+    عرض الملف
+  </a>
+</ng-container>
+
+<ng-template #uploadBlock>
+
+   <label *ngIf="to.label" class="block mb-2 font-normal">
+  {{ to.label }}
+  <span *ngIf="to.required" class="text-[#f87171]" >*</span>
+</label>
+  
+  <p-fileupload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
+    <ng-template #empty>
+        <div>Drag and drop files to here to upload.</div>
+    </ng-template>
+    <ng-template #content>
+        <ul *ngIf="uploadedFiles.length">
+            <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+        </ul>
+    </ng-template>
+</p-fileupload>
+</ng-template>
+
+<div *ngIf="control?.invalid && control?.touched" class="text-red-400 text-sm mt-2 error-tip">
+  <div *ngIf="control?.errors?.['required']">File is required.</div>
+</div>
+
+
+
+
+
+

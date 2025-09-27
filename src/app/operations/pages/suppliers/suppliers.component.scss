@@ -1,0 +1,20 @@
+*{
+    font-size: large;
+    h2{
+        font-size: x-large;
+
+    }
+    h1{
+        font-size: xx-large;
+    }
+}
+tr{
+    cursor: pointer;
+}
+tr:hover {
+  background-color: var(--p-surface-500) !important;
+  color: white;
+  td{
+    color: white !important;
+  }
+}

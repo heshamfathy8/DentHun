@@ -1,0 +1,71 @@
+ <app-floating-configurator />
+        <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
+            <div class="flex flex-col items-center justify-center">
+                <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+                    <div class="w-full bg-surface-0 dark:bg-surface-900 pb-[6rem] pt-[2rem] px-8 sm:px-20" style="border-radius: 53px;max-width: 570px;">
+                        <div class="text-center flex flex-col items-center justify-center mb-8">
+                            <img src="../../../../../assets/images/logo.png" alt="" class="w-[40%]">
+                            <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to DentHub!</div>
+                            <span class="text-muted-color font-medium">Sign in to continue</span>
+                        </div>
+
+                        <div class="relative">
+                            <form #loginForm="ngForm" novalidate>
+
+                            <!-- Email -->
+                            <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email ( or Phone )</label>
+                            <input 
+                                pInputText 
+                                id="email1" 
+                                placeholder="Email address" 
+                                class="w-full md:w-[30rem] mb-2 border rounded-md px-3 py-2"
+                                [(ngModel)]="email" 
+                                name="email"
+                                required
+                                pSize="large"
+                                #emailModel="ngModel"
+                                [ngClass]="{'border-red-500': emailModel.invalid && (emailModel.touched || loginForm.submitted)}"
+                            />
+                            <div *ngIf="emailModel.invalid && (emailModel.dirty || loginForm.submitted)" class="text-red-500 text-sm mb-4">
+                                <div *ngIf="emailModel.errors?.['required']">Email is required.</div>
+                            </div>
+
+                            <!-- Password -->
+                            <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-4">Password</label>
+                            <p-password 
+                                id="password1" 
+                                [(ngModel)]="password" 
+                                name="password"
+                                placeholder="Password" 
+                                [toggleMask]="true" 
+                                styleClass="mb-2 w-full "
+                                [feedback]="false"
+                                [fluid]="true" 
+                                required
+                                size="large"
+                                minlength="6"
+                                #passwordModel="ngModel"
+                                [ngClass]="{'p-invalid border-red-500': passwordModel.invalid && (passwordModel.dirty || loginForm.submitted)}"
+                            ></p-password>
+                            <div *ngIf="passwordModel.invalid && (passwordModel.dirty || loginForm.submitted)" class="text-red-500 text-sm mb-4">
+                                <div *ngIf="passwordModel.errors?.['required']">Password is required.</div>
+                                <div *ngIf="passwordModel.errors?.['minlength']">Password must be at least 6 characters.</div>
+                            </div>
+
+                            </form>
+
+
+                            <div class="flex items-center justify-between mt-2 mb-8 gap-8">
+                                <div class="flex items-center">
+                                    <p-checkbox [(ngModel)]="checked"  id="rememberme1" binary class="mr-2"></p-checkbox>
+                                    <label for="rememberme1">Remember me</label>
+                                </div>
+                                <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/forget-password" >Forgot password?</a>
+                            </div>
+                            <p-button label="Sign In" styleClass="w-full" (click)="login()"></p-button>
+                            <p class="text-center absolute">Don't have an account ? <a routerLink="/register" class="text-primary px-2">Create today!</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

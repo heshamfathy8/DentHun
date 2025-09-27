@@ -1,0 +1,142 @@
+<div class=" bg-transparent  mx-auto dark:bg-transparent">
+  <div class="grid grid-cols-1 xl:grid-cols-5 ">
+   
+    <!-- Left: Details -->
+    <div id="details" class="grid grid-cols-1  md:grid-cols-4 col-span-12 xl:col-span-3 card ">
+        <!-- Right: Doctor Image -->
+        <div class="h-full col-span-3 lg:col-span-2">
+          <img
+            src="../../../../assets/images/doctor.jpg"
+            alt="صورة الدكتور"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <!-- Left: Doctor Info -->
+        <div class="flex flex-col  p-8 my-5 gap-[1rem] col-span-3 lg:col-span-2">
+          <h2 class="text-3xl font-bold">Dr. Mohamed Ahmed</h2>
+
+          <p class="text-lg text-muted-color">
+            <i class="pi pi-map-marker text-primary mr-2"></i>
+            123 El Thawra Street, Cairo, Egypt
+          </p>
+
+          <p class="text-lg text-muted-color">
+            <i class="pi pi-phone text-primary mr-2"></i>
+            +20 123 456 789
+          </p>
+
+          <!-- Working Hours -->
+          <div class="bg-gray-50  bg-transparent">
+            <p class="text-md font-semibold text-muted-color mb-2">
+              <i class="pi pi-clock text-primary mr-2"></i>
+              Working Hours:
+            </p>
+            <ul class=" text-sm list-disc pl-5 space-y-1 ">
+              <li>Sunday - Thursday: 9:00 AM - 5:00 PM</li>
+              <!-- <li>Friday & Saturday: Closed</li> -->
+            </ul>
+          </div>
+        </div>
+    </div>
+
+     <div class="col-span-12 xl:col-span-1" ></div>
+
+     <!-- Right: financial -->
+     <div class=" mt-10 col-span-12 xl:col-span-1">
+   
+    <div class="card flow-root" id="finance">
+      <div class="-my-3 divide-y divide-gray-200 dark:divide-gray-800">
+        <dl class="flex items-center justify-between gap-4 py-3">
+          <dt class="text-base font-normal text-black">Total Amount</dt>
+          <dd class="text-base font-medium text-black">8,094.00 EGP </dd>
+        </dl>
+
+        <dl class="flex items-center justify-between gap-4 py-3">
+          <dt class="text-base font-normal text-black">Total Payments</dt>
+          <dd class="text-base font-medium text-black">51856 EGP</dd>
+        </dl>
+
+        <dl class="flex items-center justify-between gap-4 py-3">
+          <dt class="text-base font-bold text-black">Total Remain</dt>
+          <dd class="text-base font-bold text-black">8,158 EGP</dd>
+        </dl>
+      </div>
+    </div>
+
+    
+
+    </div>
+
+  </div>
+</div>
+
+<div class="text-center my-[3rem]"><h2 class="text-surface-900 dark:text-surface-0 font-normal mb-2 ">Orders Table</h2>
+<span class="text-muted-color ">All recent Orders and Order records...</span>
+</div>
+<div class="card">
+<p-table [value]="products" stripedRows [size]="'large'" [tableStyle]="{'min-width': '50rem'}" >
+    <ng-template #header>
+        <tr>
+            <th>Name</th>
+            <th>Payment</th>
+            <th>Date</th>
+            <th>City</th>
+            <th>Address</th>
+            <th>Phone</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-product>
+        <tr>
+            <td>{{product.name}}</td>
+            <td class="text-lg font-bold">{{product.payment}}</td>
+            <td>{{product.date}}</td>
+            <td>{{product.city}}</td>
+            <td>{{product.address}}</td>
+            <td>{{product.phone}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>
+
+<div class="text-center my-[3rem]"><h2 class="text-surface-900 dark:text-surface-0 font-normal mb-2 ">Payments Table</h2>
+<span class="text-muted-color ">All recent transactions and payment records...</span>
+</div>
+<div class="card">
+<p-table [value]="products" stripedRows [size]="'large'" [tableStyle]="{'min-width': '50rem'}">
+  <!-- Header -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Payment</th>
+      <th>Date</th>
+      <th>City</th>
+      <th>Address</th>
+      <th>Phone</th>
+    </tr>
+  </ng-template>
+
+  <!-- Body -->
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td>{{ product.name }}</td>
+      <td class="text-lg ">{{ product.payment }}</td>
+      <td>{{ product.date }}</td>
+      <td>{{ product.city }}</td>
+      <td>{{ product.address }}</td>
+      <td>{{ product.phone }}</td>
+    </tr>
+  </ng-template>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <tr>
+      <td colspan="1" class="font-bold text-right">Total Payments</td>
+      <td colspan="5" class="text-lg font-bold">25000</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+</div>
+
+
+

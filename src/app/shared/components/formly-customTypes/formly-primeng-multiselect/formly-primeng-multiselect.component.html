@@ -1,0 +1,11 @@
+ <p-multiSelect
+      [formControl]="$any(formControl)"
+      [formlyAttributes]="field"
+      [options]="(options$ | async) || []"
+      [optionLabel]="to['optionLabel'] || 'label'"
+      [optionValue]="to['optionValue'] || 'value'"
+      [placeholder]="to['placeholder']"
+      [display]="'chip'"
+      [filter]="to['filter']"
+      [showClear]="to['showClear']">
+    </p-multiSelect>

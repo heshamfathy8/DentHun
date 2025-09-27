@@ -1,0 +1,21 @@
+*{
+    font-size: large;
+    h2{
+        font-size: x-large;
+
+    }
+    h1{
+        font-size: xx-large;
+    }
+}
+ .container > div{
+    background-color: transparent;
+}
+#details{
+    padding: 0;
+}
+#finance{
+    background-color: cadetblue;
+    color: #a1a1aa;
+    border-radius: 1rem;
+}

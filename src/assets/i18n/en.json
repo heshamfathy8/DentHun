@@ -1,0 +1,8 @@
+{
+  "HELLO": "Hellodfgd",
+  "WELCOME": "Welcome to our app!",
+  "form": {
+    "username": "Username",
+    "username_placeholder": "Enter your username"
+  }
+}
