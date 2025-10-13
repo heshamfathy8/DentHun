@@ -48,6 +48,11 @@ export class HomeComponent {
           pSize:"large",
       }
       },
+       validation: {
+      messages: {
+        required: () => 'Name is required',
+      },
+    },
   },
   
   {
@@ -166,6 +171,7 @@ export class HomeComponent {
     className: 'w-full md:w-1/2 px-4 my-[15px]',
     templateOptions: {
       label: 'Upload a file',
+      mode : 'advanced',
       required:true
     },
   },
@@ -187,7 +193,7 @@ export class HomeComponent {
       addText: 'Add'
     },
     fieldArray: {
-      fieldGroupClassName: 'grid grid-cols-2 gap-8 my-1',
+      fieldGroupClassName: 'grid grid-cols-2 gap-8 mb-5',
       fieldGroup: [
         {
           key: 'name',
@@ -200,6 +206,11 @@ export class HomeComponent {
                 class: 'p-inputtext w-full my-2'
               }
           },
+          validation: {
+             messages: {
+               required: () => 'Name is required',
+             },
+           },
         },
         {
           key: 'age',
@@ -211,8 +222,13 @@ export class HomeComponent {
             required: true,
             attributes: {
                 class: 'p-inputtext w-full my-2'
-              }
-          }
+              },
+            },
+            validation: {
+             messages: {
+               required: () => 'Name is required',
+             },
+           },
         }
       ]
     }

@@ -1,5 +1,5 @@
 import { CommonModule, formatCurrency, formatDate } from '@angular/common';
-import { Component, EventEmitter, Injectable, Input, input, Output, Signal, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injectable, Input, input, Output, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProductService, Product } from '@login/services/product.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
@@ -20,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FileUpload } from 'primeng/fileupload';
+import { DatePickerModule } from 'primeng/datepicker';
 
 interface Column {
     field: string;
@@ -54,6 +55,7 @@ interface ExportColumn {
         IconFieldModule,
         SelectModule,
         ConfirmDialogModule,
+        DatePickerModule,
         FileUpload
     ],
   templateUrl: './crud.component.html',
@@ -77,21 +79,28 @@ selectedCountry
         ];
 
     @Input() products: any = signal([])
+    @Input() paginator: any = true
+    @Input() dateRange: any = true
     @Input() Add: any
     @Input() Check: any
     @Input() Pending: any
     @Input() view: any
+    @Input() totalRecords 
     @Input() Header: any
     @Input() Delete: any
+    @Input() multiDelete: any
     @Input() Update: any
     @Input() cols!: any[];
+    @Input() doctors!: any[];
     @Input() confirm!: any;
+    @Input() dialogType = 'products'
     @Input() category!: any;
+    @Input() filter: any = {}
     @Input() categories!: any[];
     @Output() DataChange = new EventEmitter<any>();
     @Output() viewDetails = new EventEmitter<any>();
 
-    product!: any;
+    product: any = {}
 
     selectedProducts!: Product[] | null;
 
@@ -110,14 +119,14 @@ selectedCountry
     isEdit
 
     constructor(
-        private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
 
     exportCSV() {
-        this.dt.exportCSV();
+        this.DataChange.emit({name:'exportCSV' })
       }
       ngOnInit(){
+          console.log('crudddd');
         this.loadDemoData()
     }
 
@@ -134,10 +143,11 @@ selectedCountry
         this.exportColumns = this.cols.map((col) => ({ title: col.header, dataKey: col.field }));
     }
 
-    onGlobalFilter(table: Table, event: Event) {
-
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-         this.DataChange.emit({name:'search', word: (event.target as HTMLInputElement).value })
+    onGlobalFilter() {
+        this.filter.search =  this.product.search
+        this.filter.rangeDate =  this.product.rangeDate
+       
+         this.DataChange.emit({name:'search', filter: this.filter })
     }
     route(e){
         this.viewDetails.emit(e)
@@ -150,15 +160,18 @@ selectedCountry
         this.productDialog = true;
     }
 
-    editProduct(product: Product,id) {
+    editProduct(product: Product,index) {
         this.isEdit = true
         this.imageURL = product['img']
-        this.product = { ...product };
+        this.product = { ...product ,index : index};
         this.productDialog = true;
         
         
     }
-
+log(product){
+    console.log(product);
+    
+}
     deleteSelectedProducts() {
         this.confirmationService.confirm({
             message: 'Are you sure you want to delete the selected products?',
@@ -186,11 +199,11 @@ selectedCountry
         this.submitted = false;
     }
 
-    deleteProduct(product: Product) {
+    deleteProduct(product: Product , index) {
         this.confirmationService.confirm({
             message: 'Are you sure you want to delete ' + product.name + '?',
             header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
+            icon: 'pi pi-exclamation-triangle red',
              acceptButtonProps: {
                 label: 'Delete',
                 severity: 'danger',
@@ -201,7 +214,45 @@ selectedCountry
                 outlined: true,
             },
             accept: () => {
-                this.DataChange.emit({name:'delete',product: product})
+                this.DataChange.emit({name:'delete',product: product , index :index })
+            }
+        });
+    }
+    onCancel(product: Product , index) {
+        this.confirmationService.confirm({
+            message: 'Are you sure you want to reject ' + product.name + '?',
+            header: 'Confirm',
+            icon: 'pi pi-exclamation-triangle red',
+             acceptButtonProps: {
+                label: 'Reject',
+                severity: 'danger',
+            },
+             rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true,
+            },
+            accept: () => {
+                this.DataChange.emit({name:'cancel',product: product , index :index })
+            }
+        });
+    }
+    onConfirm(product: Product , index) {
+        this.confirmationService.confirm({
+            message: 'Are you sure you want to reject ' + product.name + '?',
+            header: 'Confirm',
+            icon: 'pi pi-check-circle',
+             acceptButtonProps: {
+                label: 'Confirm',
+                severity: 'success',
+            },
+             rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true,
+            },
+            accept: () => {
+                this.DataChange.emit({name:'confirm',product: product , index :index })
             }
         });
     }
@@ -242,7 +293,9 @@ selectedCountry
     }
     loadPage(page){
         console.log(page);
-        this.DataChange.emit({name:'paginate',page: page})
+         page = page / 10 + 1;
+         this.filter.page = page
+        this.DataChange.emit({name:'paginate',filter : this.filter})
     }
     // saveProduct() {
     //     this.submitted = true;
@@ -277,10 +330,10 @@ selectedCountry
     // }
     saveProduct() {
         this.isEdit ?
-          this.DataChange.emit({name:'update',product: this.product, id : this.product.id , imageURL : this.imageURL})
-        : this.DataChange.emit({name:'save',product: this.product , imageURL : this.imageURL});
+          this.DataChange.emit({name:'update',product: this.product, id : this.product.id })
+        : this.DataChange.emit({name:'save',product: this.product });
 
-        this.productDialog = false
+        // this.productDialog = false
     }
  firstLetterUppercase(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);

@@ -2,16 +2,15 @@
     <div class="max-w-screen-2x px-4 mx-auto 2xl:px-0">
       <div class="lg:grid xl:grid-cols-2 lg:gap-8 xl:gap-16">
         <div class=" mx-auto">
-           <div class="card" id="card">
+           <div class="card !p-0 m-[2rem] relative group" id="card">
             <!-- <div class="font-semibold text-xl mb-4">Galleria</div> -->
-            <p-galleria [value]="images" [responsiveOptions]="galleriaResponsiveOptions" [containerStyle]="{ 'max-width': '640px' }" [numVisible]="5">
-                <ng-template #item let-item>
-                    <img [src]="item.itemImageSrc" style="width:100%" />
-                </ng-template>
-                <ng-template #thumbnail let-item>
-                    <img [src]="item.thumbnailImageSrc" />
-                </ng-template>
-            </p-galleria>
+            <p-image class="w-full hover:none" src="https://cdn11.bigcommerce.com/s-wolrxh284p/images/stencil/608x608/products/4992/3422/METAPASTE_CALCIUM_HYDROXIDE_WITH_BARIUM_SULFATE_-_META_BIOMED_2__08888.1565020450.png?c=2" alt="Image" [preview]="true" />
+
+             <i
+              class="pi pi-eye absolute  m-auto text-white  opacity-0 group-hover:opacity-100 top-[50%] left-[50%] transition-opacity duration-800"
+              style="font-size: 1.5rem"
+            ></i>
+
         </div>
         </div>
 

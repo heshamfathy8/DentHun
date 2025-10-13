@@ -1275,13 +1275,21 @@ export class ProductService {
     getProductsWithOrdersSmall() {
         return Promise.resolve(this.getProductsWithOrdersData().slice(0, 10));
     }
+    
 
-    toFormData(form){
-        let formData = new FormData()
-        Object.keys(form).forEach(key => {
-            formData.append(key, form[key])
-        });
-        return formData
+   toFormData(form: any, formData: FormData = new FormData(), parentKey: string | null = null): FormData {
+        if (form && typeof form === 'object' && !(form instanceof Date) && !(form instanceof File)) {
+            Object.keys(form).forEach(key => {
+            const value = form[key];
+            const fullKey = parentKey ? `${parentKey}[${key}]` : key;
+            this.toFormData(value, formData, fullKey);
+            });
+        } else {
+            // لو null أو undefined نحولها string فاضية
+            const value = form == null ? '' : form;
+            formData.append(parentKey!, value);
+        }
+        return formData;
     }
 
     generatePrduct(): Product {

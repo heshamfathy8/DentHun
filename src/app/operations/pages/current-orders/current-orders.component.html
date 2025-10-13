@@ -1,11 +1,11 @@
 
  <app-package
-    #Crud
-    [products]="products"
-    [Add]="true"
-    [confirm]="true"
-    [Update]="true"
-    [Pending]="true"
-    [Delete]="true"
+    #Package
+    [products]="orders"
+     [totalRecords]="totalRecords"
+    [confirm]="role == 'supplier'"
+    [Update]="role == 'doctor'"
+    [Pending]="role == 'supplier'"
+    [Delete]="role == 'doctor'"
     [cols]="cols"
   ></app-package>

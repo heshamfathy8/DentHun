@@ -2,9 +2,12 @@
  <app-crud
     #Crud
     [products]="products"
+    [totalRecords]="totalRecords()"
     [Header]="true"
+    [dateRange]="false"
     [Add]="true"
     [Delete]="true"
+    [multiDelete]="true"
     [Update]="true"
     [cols]="cols"
     [categories]="categories"

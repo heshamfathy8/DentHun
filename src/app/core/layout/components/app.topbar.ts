@@ -58,11 +58,11 @@ import { MenuModule } from 'primeng/menu';
                         <i class="pi pi-heart"></i>
                          <span>Favorites</span>
                     </button>
-                    <button type="button" (click)="menu.toggle($event)" class="layout-topbar-action" >
+                    <button type="button" (click)="menu.toggle($event)" class="layout-topbar-action " >
                         <i class="pi pi-user"></i>
                         <span>Profile</span>
                     </button>
-                    <p-menu #menu [model]="items" [popup]="true" />
+                    <p-menu #menu [model]="items" [popup]="true" appendTo="body"/>
                 </div>
             </div>
         </div>

@@ -1,9 +1,9 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, Signal, signal, ViewChild } from '@angular/core';
 import { ProductService } from '@login/services/product.service';
 import { SupplierService } from '@operations/services/supplier.service';
 import { CrudComponent } from '@shared/pages/crud/crud.component';
 import { MessageService } from 'primeng/api';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import {  distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import _ from "lodash";
 
 @Component({
@@ -23,13 +23,13 @@ export class StoreComponent {
  searchWord = new Subject()
  products = signal([])
  categories :any[]
- 
+ totalRecords = signal(0)
 cols;
 
 @ViewChild('Crud') crud!: CrudComponent;
 
  ngOnInit() {
-  this.loadData();
+  this.loadData({page:1});
   this.getCategories()
  this.search()
 
@@ -37,27 +37,8 @@ cols;
 }
 
  
-check(val){
-  console.log(typeof val);
 
-}
-bigflat(bigarray :any[]){
-  let newArray = []
 
-  function flat(arr:any){
-  if (Array.isArray(arr)) {
-    arr.forEach(item => {
-          flat(item)
-    });
-  }
-  else{
-    newArray.push(arr)
-  }
-    
-  }
-  flat(bigarray)
-  return newArray
-}
 
 
 ngAfterViewInit(){
@@ -70,35 +51,40 @@ ngAfterViewInit(){
 
       case 'save':
         console.log(event.product);
-        this.saveProduct({...event.product,imageURL :event.imageURL})
+        this.saveProduct({...event.product})
         break;
 
       case 'update':
         console.log(event.product);
-        this.updateProduct(event.product,event.id,event.imageURL)
+        this.updateProduct(event.product,event.id)
         break;
 
       case 'paginate':
-        console.log(event.page.first);
-        this.loadData(event.page.first)
+        console.log(event.filter);
+        this.loadData(event.filter)
         break;
 
       case 'search':
-        console.log(event.word);
-         this.searchWord.next(event.word)
+        console.log(event.filter);
+         this.searchWord.next(event.filter)
+        break;
+
+      case 'exportCSV':
+        console.log(event.name);
+        this.exportCSV()
         break;
     
       default:
         break;
     }
-
-
-
   })
 }
-loadData(page = 1){
-    this.supplierService.getProducts(page).subscribe((res) => {
+loadData(filter){
+    this.supplierService.getProducts(filter).subscribe((res:any) => {
         this.products.set( res['data']);
+        this.totalRecords.set(res.meta.total)
+        console.log(this.totalRecords());
+        
     });
 
     this.cols = [
@@ -107,9 +93,9 @@ loadData(page = 1){
                 { field: '', header: 'Description' },
                 { field: 'price', header: 'Price' },
                 { field: 'quantity', header: 'Quantity' },
-                { field: 'category', header: 'Category' },
+                { field: 'category_name', header: 'Category' },
                 { field: 'rating', header: 'Reviews' },
-                { field: 'inventoryStatus', header: 'Status' },
+                { field: 'status', header: 'Status' },
             ];
 }
 getCategories(){
@@ -119,11 +105,21 @@ getCategories(){
 
    
 }
+exportCSV(){
+  this.supplierService.storeExportCSV().subscribe((res: Blob) => {
+    const fileURL = window.URL.createObjectURL(res);
+    const a = document.createElement('a');
+    a.href = fileURL;
+    a.download = 'report.xlsx';  // 👈 choose your file name
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(fileURL); // cleanup
+  });
+}
 
-
-updateProduct(form,id,imageURL){
+updateProduct(form,id){
    console.log(form);
- 
    
    if (!(form.img instanceof File)) {
      delete form.img
@@ -131,10 +127,11 @@ updateProduct(form,id,imageURL){
   let formData = this.productService.toFormData(form)
   
   this.supplierService.updateProduct(formData,id).subscribe(res=>{
-    form.img = imageURL
-    form.category_name = this.categories.find(item => item.id == form.category_id).name
+    // form.category_name = this.categories.find(item => item.id == form.category_id).name
    this.products.update(arr => {
-      return arr.map(item => item.id === id ? form : item)
+     let i =arr.findIndex(item => item.id === id)
+     arr[i] = res['data']
+      return arr
     })
     
     this.crud.productDialog = false
@@ -181,14 +178,12 @@ deleteProduct(selectedProducts){
 
 search(){
   this.searchWord.pipe(
-    debounceTime(2000),          // تمنع ال search من إرسال طلبات كثيرة بسرعة
-    distinctUntilChanged(),     // لو نفس القيمة، متعملش request تاني
-    switchMap((word) =>  this.supplierService.search(word))
+    switchMap((val) =>  this.supplierService.getProducts(val))
   )
   .subscribe(res=>{
      this.products.set( res['data']);
+      this.totalRecords.set(res['meta'].total)
    })
-   
 }
 
 

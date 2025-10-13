@@ -119,7 +119,7 @@ export const routes: Routes = [
            
           },
           {
-            path: 'doctor-details',
+            path: 'doctor-details/:id',
             loadComponent: () =>
               import(
                 '@operations/pages/doctor-details/doctor-details.component'
@@ -187,6 +187,20 @@ export const routes: Routes = [
               import(
                 '@operations/pages/profile/profile.component'
               ).then((m) => m.ProfileComponent),
+          },
+          {
+            path: 'my-cart',
+            loadComponent: () =>
+              import(
+                '@operations/pages/my-cart/my-cart.component'
+              ).then((m) => m.MyCartComponent),
+          },
+          {
+            path: 'create-package',
+            loadComponent: () =>
+              import(
+                '@operations/pages/create-package/create-package.component'
+              ).then((m) => m.CreatePackageComponent),
           },
        
         ],

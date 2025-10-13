@@ -1,20 +1,68 @@
-<p-table [value]="products" selectionMode="single" stripedRows [tableStyle]="{'min-width': '50rem'}">
-    <ng-template #header>
-        <tr>
-            <th>Name</th>
-            <th>Adress</th>
-            <th>City</th>
-            <th>Phone</th>
-            <th>Total</th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-product>
-        <tr routerLink="/operations/doctor-details"  >
-            <td >{{product.name}}</td>
-            <td class="text-muted-color">{{product.address}}</td>
-            <td class="text-muted-color">{{product.city}}</td>
-            <td class="text-muted-color">{{product.phone}}</td>
-            <td class="text-lg font-bold">{{product.total}}</td>
-        </tr>
-    </ng-template>
-</p-table>
+<div class="flex card gap-2" #center id="center">
+  <p-iconfield>
+      <p-inputicon>
+          <i class="pi pi-search"></i>
+      </p-inputicon>
+    <input pInputText type="text" (input)="onSearch( $event.target['value'])" placeholder="Search..." autocomplete="off"/>
+  </p-iconfield>
+
+  <p-select [options]="countries" [(ngModel)]="selectedCountry" (ngModelChange)="onChangeCategory($event)" optionLabel="name" optionValue="value"  [showClear]="true" placeholder="Categories" class="w-full md:w-56">
+      <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2">
+          
+              <div>{{ selectedOption.name }}</div>
+          </div>
+      </ng-template>
+      <ng-template let-country #item>
+          <div class="flex items-center gap-2">
+              <div>{{ country.name }}</div>
+          </div>
+      </ng-template>
+  </p-select>
+
+  <!-- <p-select [options]="countries" [(ngModel)]="sorted" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Sort" class="w-full md:w-56">
+      <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2">
+          
+              <div>{{ selectedOption.name }}</div>
+          </div>
+      </ng-template>
+      <ng-template let-country #item>
+          <div class="flex items-center gap-2">
+              <div>{{ country.name }}</div>
+          </div>
+      </ng-template>
+  </p-select> -->
+
+  <!-- <p-button label="Export" class="ml-auto" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" /> -->
+</div>
+<div class="card">
+    <p-table [value]="products" selectionMode="single" stripedRows [tableStyle]="{'min-width': '50rem'}"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+            [totalRecords]="totalRecords"
+             [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10]"
+            [rows]="10"
+            [lazy]="true"
+            (onLazyLoad)="loadData($event.first)"
+    >
+        <ng-template #header>
+            <tr>
+                <th>Name</th>
+                <th>Adress</th>
+                <th>City</th>
+                <th>Phone</th>
+                <th>Total</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-product>
+            <tr [routerLink]="'/operations/doctor-details/'+ product.id"  >
+                <td >{{product.name}}</td>
+                <td class="text-muted-color">{{product.address}}</td>
+                <td class="text-muted-color">{{product.city}}</td>
+                <td class="text-muted-color">{{product.phone}}</td>
+                <td class="text-lg font-bold">{{product.remaining}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

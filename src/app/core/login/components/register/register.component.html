@@ -130,16 +130,45 @@
       placeholder="Select Role"
       required
       class="w-full  text-lg md:w-[30rem] mb-2"
+      #department_idModel="ngModel"
       [ngClass]="{
         'border-red-500': department_idModel.invalid && 
                           (department_idModel.touched || registerForm.submitted)
-      }"
-      #department_idModel="ngModel">
+      }">
     </p-select>
 
     <div *ngIf="department_idModel.invalid && (department_idModel.touched || registerForm.submitted)" 
         class="text-red-500 text-sm mb-4">
       department_id is required.
+    </div>
+
+
+        <!-- City -->
+    <label for="department_id" 
+          class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">
+      City
+    </label>
+
+    <p-select
+      [options]="Cities"
+      optionLabel="name"
+      optionValue="id"
+      [(ngModel)]="city_id"
+      name="city_id"
+      placeholder="Select City"
+      required
+       #cityModel="ngModel"
+      class="w-full  text-lg md:w-[30rem] mb-2"
+      [ngClass]="{
+        'border-red-500': cityModel.invalid && 
+                          (cityModel.touched || registerForm.submitted)
+      }"
+     >
+    </p-select>
+
+    <div *ngIf="cityModel.invalid && (cityModel.touched || registerForm.submitted)" 
+        class="text-red-500 text-sm mb-4">
+      city required.
     </div>
 
 
@@ -155,6 +184,20 @@
     <div *ngIf="addressModel.invalid && (addressModel.touched || registerForm.submitted)" class="text-red-500 text-sm mb-4">
       <div *ngIf="addressModel.errors?.['required']">Address is required.</div>
       <div *ngIf="addressModel.errors?.['minlength']">Address must be at least 5 characters.</div>
+    </div>
+
+    <!-- working hours -->
+    <label for="workingHours" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Working Hours</label>
+    <input pInputText pSize="large" id="workingHours" type="text"
+      placeholder="Sunday - Thursday: 9:00 AM - 5:00 PM"
+      class="w-full md:w-[30rem] mb-2"
+      [(ngModel)]="workingHours" name="workingHours"
+      required minlength="5"
+      #workingHoursModel="ngModel"
+      [ngClass]="{'border-red-500': workingHoursModel.invalid && (workingHoursModel.touched || registerForm.submitted)}" />
+    <div *ngIf="workingHoursModel.invalid && (workingHoursModel.touched || registerForm.submitted)" class="text-red-500 text-sm mb-4">
+      <div *ngIf="workingHoursModel.errors?.['required']">workingHours is required.</div>
+      <div *ngIf="workingHoursModel.errors?.['minlength']">workingHours must be at least 5 characters.</div>
     </div>
 
     <!-- Submit Button -->

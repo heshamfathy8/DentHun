@@ -15,15 +15,15 @@
   <span *ngIf="to.required" class="text-[#f87171]" >*</span>
 </label>
   
-  <p-fileupload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
+  <p-fileupload  #fileUploader name="demo[]"  (onSelect)="onUpload($event, fileUploader)" [multiple]="to['multiple']" accept="image/*" maxFileSize="100000000" [mode]="to['mode']">
     <ng-template #empty>
         <div>Drag and drop files to here to upload.</div>
     </ng-template>
-    <ng-template #content>
-        <ul *ngIf="uploadedFiles.length">
+    <div #content>
+        <ul >
             <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
         </ul>
-    </ng-template>
+    </div>
 </p-fileupload>
 </ng-template>
 

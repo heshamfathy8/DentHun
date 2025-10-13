@@ -2,9 +2,14 @@
  <app-crud
     #Crud
     [products]="products"
+    [dialogType]="'payments'"
     [Header]="true"
-    [Add]="true"
-    [Delete]="true"
-    [Update]="true"
+    [Add]="role =='supplier'"
+    [Delete]="role =='supplier'"
+    [Update]="role =='supplier'"
     [cols]="cols"
+    [filter]="filter"
+    [doctors]="doctors"
+    [totalRecords]="totalRecords"
+    (DataChange)="DataChange($event)"
   ></app-crud>

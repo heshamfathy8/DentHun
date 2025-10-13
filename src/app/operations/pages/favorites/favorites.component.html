@@ -1,3 +1,10 @@
 <app-products
+  [favo]="true"
+  [totalRecords]="totalRecords"
+  [products]="products()"
+  [categories]="categories"
+  [sorts]="sorts"
+  (DataChange)="DataChange($event)"
   >
 </app-products>
+ <p-confirmdialog [style]="{ width: '450px' }" />

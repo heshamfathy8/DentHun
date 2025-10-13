@@ -1,8 +1,8 @@
-::ng-deep  app-repeat-type button{
-    margin-inline: 14px;
-    font-size: small;
+
+::ng-deep p-table .p-datatable-tbody > tr > td , ::ng-deep p-table .p-datatable-thead > tr > th{
+    text-align: center;
 }
-::ng-deep .submit{
-   width: 10rem;
-   margin-top: 1rem;
+::ng-deep p-table .p-datatable-tbody > tr > td:is(:nth-child(1), :nth-child(2)),
+::ng-deep p-table .p-datatable-thead > tr > th:is(:nth-child(1), :nth-child(2)){
+    text-align: start;
 }

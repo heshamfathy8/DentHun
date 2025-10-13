@@ -1,10 +1,14 @@
 <div class="card">
     <p-toast />
-    <p-table [value]="products" dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)" (onRowCollapse)="onRowCollapse($event)">
+    <p-table [value]="products()" dataKey="id" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows"
+        [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+        [totalRecords]="totalRecords" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10]" [rows]="10"
+        [lazy]="true" (onLazyLoad)="loadPage($event.first)">
         <ng-template #caption>
             <div class="flex justify-between items-center ">
                 <div>
-                    <p-button  *ngIf="Add" label="New" icon="pi pi-plus" severity="primary" class="mr-2 new" (onClick)="openNew()"  />
+                    <p-button *ngIf="Add" label="New" icon="pi pi-plus" severity="primary" class="mr-2 new"
+                        (onClick)="openNew()" />
                 </div>
                 <div class="flex flex-wrap justify-end gap-2">
                     <p-button label="Expand All" icon="pi pi-plus" text (onClick)="expandAll()" />
@@ -17,83 +21,139 @@
                 <th style="width: 5rem"></th>
                 <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
                 <th>Image</th>
-                <th pSortableColumn="price">Price <p-sortIcon field="price" /></th>
-                <th pSortableColumn="category">Category <p-sortIcon field="category" /></th>
-                <!-- <th pSortableColumn="rating">Reviews <p-sortIcon field="rating" /></th> -->
-                <th pSortableColumn="inventoryStatus">Status <p-sortIcon field="inventoryStatus" /></th>
+                <th pSortableColumn="total_order_price">Total Price <p-sortIcon field="total_order_price" /></th>
+                <th pSortableColumn="created_at">Date <p-sortIcon field="created_at" /></th>
+                <th pSortableColumn="statuts">Status <p-sortIcon field="statuts" /></th>
+                <th pSortableColumn="notes">Notes <p-sortIcon field="notes" /></th>
                 <th></th>
             </tr>
         </ng-template>
-        <ng-template #body let-product let-expanded="expanded">
+        <ng-template #body let-order let-index="rowIndex" let-expanded="expanded">
             <tr>
                 <td>
-                    <p-button type="button" pRipple [pRowToggler]="product" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                    <p-button type="button" pRipple [pRowToggler]="order" [text]="true" [rounded]="true" [plain]="true"
+                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                 </td>
-                <td>{{ product.name }}</td>
-                <td class="flex gap-2">
-                    <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" width="50" class="shadow-lg" />
-                    <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" width="50" class="shadow-lg" />
-                    <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" width="50" class="shadow-lg" />
-                    <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" width="50" class="shadow-lg" />
+                <td>{{ order.doctor_name }}</td>
+                <td class="flex justify-center gap-2">
+                    <img *ngFor="let product of order?.products" [src]=" product?.img" [alt]="product?.name" width="50"
+                        class="shadow-lg" />
                 </td>
-                <td>{{ product.price | currency : 'USD' }}</td>
-                <td>{{ product.category }}</td>
-                <!-- <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false" /></td> -->
+                <td>{{ order.total_order_price }}</td>
+                <td>{{ order.created_at }}</td>
                 <td>
-                    <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)" />
+                    <p-tag [value]="order?.status" [severity]="getStatusSeverity(order?.status)" class="mx-auto" />
                 </td>
                 <td>
-                     <p-button *ngIf="Buy" icon="pi pi-heart" severity="success" styleClass="h-full mr-2" [outlined]="true"></p-button> 
-                    <p-button  *ngIf="Buy" label="Buy Now"  severity="success" class="mr-2" (onClick)="openNew()"  />
-                      <p-button *ngIf="confirm" severity="success" icon="pi pi-check" class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)"  />
-                    <p-button icon="pi pi-pencil"  class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)" *ngIf="Update" />
-                    <p-button *ngIf="Pending" icon="pi pi-history" severity="warn"  class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)" />
-                    <p-button *ngIf="confirm" icon="pi pi-times"  severity="danger" class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)"  />
-                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteProduct(product)" *ngIf="Delete" />
+                    {{order.notes}}
+                </td>
+                <td>
+                    <!-- doctor actions -->
+                    <p-button *ngIf="Buy" [icon]="order.favorite ? 'pi pi-heart-fill': 'pi pi-heart' "
+                        [text]="order.favorite " [outlined]="true" styleClass="h-full mr-2"
+                        (click)="markAsFavorite(order , index)">
+                    </p-button>
+                    
+                    <p-button *ngIf="!order.is_added && Buy; else addedTpl" icon="pi pi-shopping-cart" label="Add to Cart"
+                        styleClass="flex-auto md:flex-initial whitespace-nowrap" (click)="buy(order , index)">
+                    </p-button>
+
+                    <ng-template #addedTpl >
+                        <p-button *ngIf="Buy" icon="pi pi-check-circle" label="Show Cart" severity="info" outlined="true"
+                            styleClass="flex-auto md:flex-initial whitespace-nowrap" routerLink="/operations/my-cart">
+                        </p-button>
+                    </ng-template>
+
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                        (click)="deleteOrder(order,index)" *ngIf="Delete" />
+
+                    <!-- supplier actions -->
+                    <p-button *ngIf="confirm" severity="success" icon="pi pi-check" class="mr-2" [rounded]="true"
+                        [outlined]="true" (click)="acceptOrder(order,index)" />
+                    <p-button *ngIf="Pending && order.status !== 'preparing'" icon="pi pi-history" severity="warn"
+                        class="mr-2" [rounded]="true" [outlined]="true" (click)="pendOrder(order)" />
+                    <p-button *ngIf="confirm" icon="pi pi-times" severity="danger" class="mr-2" [rounded]="true"
+                        [outlined]="true" (click)="cancelOrder(order ,index)" />
                 </td>
             </tr>
         </ng-template>
-        <ng-template #expandedrow let-product>
+        <ng-template #expandedrow let-order let-index="rowIndex">
             <tr>
                 <td colspan="7">
                     <div class="p-4">
-                        <h5 class="text-muted-color">Orders for {{ product.name }}</h5>
-                        <p-table [value]="product.orders" dataKey="id">
+                        <h5 class="text-muted-color">Orders for {{ order.doctor_name }}</h5>
+                        <p-table [value]="order.products" dataKey="id">
                             <ng-template #header>
-                                <tr>
-                                  <th>Name</th>
-                                  <th>Image</th>
-                                  <th>Category</th>
-                                  <th>Amount</th>
-                                    <th style="width: 4rem"></th>
-                                </tr>
-                            </ng-template>
-                            <ng-template #body let-order>
-                                <tr>
-                                    <td>{{ order.id }}</td>
-                                    <td>{{ order.customer }}</td>
-                                    <td>{{ order.date }}</td>
-                                    <td>{{ order.amount | currency : 'USD' }}</td>
-                                    <td>
-                                        <div class="flex gap-2">
-                                            <p-button *ngIf="confirm" severity="success" icon="pi pi-check" class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)"  />
-                                            <p-button icon="pi pi-pencil"  class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)" *ngIf="Update" />
-                                            <p-button *ngIf="Pending" icon="pi pi-history" severity="warn"  class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)" />
-                                            <p-button *ngIf="confirm" icon="pi pi-times"  severity="danger" class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)"  />
-                                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteProduct(product)" *ngIf="Delete" />
-                                        </div>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                            <ng-template #emptymessage>
-                                <tr>
-                                    <td colspan="6">There are no order for this product yet.</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
+            <tr>
+                <th>Name</th>
+                <th>Image</th>
+                <th>price</th>
+                <th>Quantity</th>
+                <th>Category</th>
+                <th style="width: 4rem"></th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-product let-Pindex="rowIndex">
+            <tr>
+                <td>{{ product?.name }}</td>
+                <td><img [src]="product.img" alt="product.name" width="50" class="shadow-lg"></td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product?.category_name }}</td>
+
+                <td>
+                    <div class="flex gap-2">
+
+                        <!-- supplier actions -->
+                        <!-- <p-button *ngIf="confirm" severity="success" icon="pi pi-check" class="mr-2" [rounded]="true" [outlined]="true" (click)="acceptOrder(product,Pindex)"  />
+                                            <p-button *ngIf="Pending" icon="pi pi-history" severity="warn"  class="mr-2" [rounded]="true" [outlined]="true" (click)="pendOrder(product)" />
+                                            <p-button *ngIf="confirm" icon="pi pi-times"  severity="danger" class="mr-2" [rounded]="true" [outlined]="true" (click)="cancelOrder(product ,Pindex)"  /> -->
+
+                        <!-- doctor actions -->
+                        <p-button icon="pi pi-sync" class="mr-2" [rounded]="true" [outlined]="true"
+                            (click)="editProduct(product ,order)" *ngIf="Refound" pTooltip="Refound" showDelay="500"
+                            tooltipPosition="top" />
+                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                            (click)="editProduct(product ,order)" *ngIf="Update" />
+                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                            (click)="deleteOrder(product,index,Pindex)" *ngIf="Delete" />
                     </div>
                 </td>
             </tr>
         </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="6">There are no order for this product yet.</td>
+            </tr>
+        </ng-template>
     </p-table>
 </div>
+</td>
+</tr>
+</ng-template>
+</p-table>
+</div>
+<p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true">
+    <ng-template #content>
+        <div class="flex flex-col gap-6">
+            <img [src]="product.img" [alt]="product.name" class="block w-50 m-auto pb-4" *ngIf="product.img" />
+            <div>
+                <label for="name" class="block font-bold mb-3">Name</label>
+                <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus fluid disabled />
+            </div>
+
+            <div>
+                <label for="quantity" class="block font-bold mb-3">Quantity</label>
+                <p-inputnumber id="quantity" required [(ngModel)]="product.quantity" fluid />
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
+        <p-button label="Save" icon="pi pi-check" (click)="saveProduct()"
+            [disabled]="!( product.name && product.desc && product.category_id &&  product.price &&  product.quantity)" />
+    </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />

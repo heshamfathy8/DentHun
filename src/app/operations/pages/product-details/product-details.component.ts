@@ -40,7 +40,7 @@ export class ProductDetailsComponent {
     ngOnInit() {
       
         this.photoService.getImages().then((images) => {
-            this.images = images;
+            this.images = images.slice(0,1);
         });
     }
 }

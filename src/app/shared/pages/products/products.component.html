@@ -5,42 +5,20 @@
           
             <p-dataview [value]="products" [layout]="layout" >
                 <ng-template #header>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-end">
 
-                          <div class="flex justify-between gap-2" #center>
+                          <div class="flex justify-between gap-2 flex-wrap" #center>
                             <p-iconfield>
                                 <p-inputicon>
                                     <i class="pi pi-search"></i>
                                 </p-inputicon>
-                                <input pInputText placeholder="Search" />
+                                <input pInputText placeholder="Search" (input)=" onFilter('search', $event.target['value'])" />
                             </p-iconfield>
 
-                            <p-select [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Categories" class="w-full md:w-56">
-                                <ng-template #selectedItem let-selectedOption>
-                                    <div class="flex items-center gap-2">
-                                    
-                                        <div>{{ selectedOption.name }}</div>
-                                    </div>
-                                </ng-template>
-                                <ng-template let-country #item>
-                                    <div class="flex items-center gap-2">
-                                        <div>{{ country.name }}</div>
-                                    </div>
-                                </ng-template>
+                            <p-select [options]="categories"  [showClear]="true" [(ngModel)]="selectedCountry" (ngModelChange)="onFilter('category_id',selectedCountry)" optionLabel="name" optionValue="id" [filter]="true" filterBy="name" placeholder="Categories" class="w-56">
                             </p-select>
 
-                            <p-select [options]="countries" [(ngModel)]="sorted" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Sort" class="w-full md:w-56">
-                                <ng-template #selectedItem let-selectedOption>
-                                    <div class="flex items-center gap-2">
-                                    
-                                        <div>{{ selectedOption.name }}</div>
-                                    </div>
-                                </ng-template>
-                                <ng-template let-country #item>
-                                    <div class="flex items-center gap-2">
-                                        <div>{{ country.name }}</div>
-                                    </div>
-                                </ng-template>
+                            <p-select [options]="sorts"  [showClear]="true" [(ngModel)]="sorted" (ngModelChange)="onFilter('sort',sorted)" optionValue="id" optionLabel="name" [filter]="true" filterBy="name"  placeholder="Sort" class="w-56">
                             </p-select>
                             </div>
 
@@ -58,18 +36,18 @@
                     <div class="flex flex-col">
                         <div *ngFor="let item of items; let i = index">
                             <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" [ngClass]="{ 'border-t border-surface': i !== 0 }" >
-                                <div class="md:w-40 relative"  routerLink="/operations/products-details/10">
-                                    <img class="block xl:block mx-auto rounded w-full" src="https://primefaces.org/cdn/primevue/images/product/{{ item.image }}" [alt]="item.name" />
+                                <div class="  md:w-40 relative"  [routerLink]="'/operations/products-details/' + item.id">
+                                    <img class="block xl:block mx-auto rounded w-full" [src]="item.img" [alt]="item.name" />
                                     <div class="absolute bg-black/70 rounded-border" [style]="{ left: '4px', top: '4px' }">
-                                        <p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>
+                                        <p-tag [value]="item.status" [severity]="getSeverity(item.status)"></p-tag>
                                     </div>
                                 </div>
-                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2" routerLink="/operations/products-details/10">
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center flex-1 gap-6">
+                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2" [routerLink]="'/operations/products-details/'+item.id">
                                         <div>
-                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category }}</span>
+                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category_name }}</span>
                                             <div class="text-lg font-medium mt-2">{{ item.name }}</div>
-                                             <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ 'Hesham - Portsaid' }}</span>
+                                             <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.supplier_name + ' - '+ item.city_name }}</span>
                                         </div>
                                         <div class="bg-surface-100 p-1" style="border-radius: 30px">
                                             <div
@@ -86,14 +64,34 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col md:items-end gap-8">
+                                    <div class="flex flex-col items-end gap-8">
                                         <div>
-                                            <del class="text-xl font-semibold mx-4">$ {{ item.price }}</del>
-                                            <span class="text-xl font-semibold">$ {{ item.price }}</span>
+                                            <!-- <del class="text-xl font-semibold mx-4">$ {{ item.price }}</del> -->
+                                            <span class="text-xl font-semibold"> {{ item.price }} LE</span>
                                         </div>
-                                        <div class="flex flex-row-reverse md:flex-row gap-2">
-                                            <p-button *ngIf="favo" icon="pi pi-heart" styleClass="h-full" [outlined]="true"></p-button>
-                                            <p-button icon="pi pi-shopping-cart" label="Buy Now" [disabled]="item.inventoryStatus === 'OUTOFSTOCK'" styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
+                                        <div class="flex  md:flex-row gap-2">
+                                            <p-button *ngIf="favo"
+                                             [icon]="item.favorite ? 'pi pi-heart-fill': 'pi pi-heart' "
+                                             [text]="item.favorite "
+                                             [outlined]="true"
+                                             styleClass="h-full"
+                                             (click)="markAsFavorite(item , i)">
+                                            </p-button>
+
+                                            <p-button *ngIf="!item.is_added; else addedTpl" icon="pi pi-shopping-cart" label="Add to Cart"  styleClass="flex-auto md:flex-initial whitespace-nowrap"
+                                             (click)="buy(item , i)" >
+                                            </p-button>
+                                           
+                                            <ng-template #addedTpl>
+                                                <p-button
+                                                    icon="pi pi-check-circle"
+                                                    label="Show Cart"
+                                                    severity="info"
+                                                    outlined="true"
+                                                    styleClass="flex-auto md:flex-initial whitespace-nowrap"
+                                                    routerLink="/operations/my-cart">
+                                                </p-button>
+                                            </ng-template>
                                         </div>
                                     </div>
                                 </div>
@@ -103,53 +101,90 @@
                 </ng-template>
 
                 <ng-template #grid let-items>
-                    <div class="grid grid-cols-12 gap-4">
-                        <div *ngFor="let item of items; let i = index" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2">
-                            <div class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col">
-                                <div class="bg-surface-50 flex justify-center rounded p-6">
-                                    <div class="relative mx-auto">
-                                        <img class="rounded w-full" src="https://primefaces.org/cdn/primevue/images/product/{{ item.image }}" [alt]="item.name" style="max-width: 300px" />
-                                        <div class="absolute bg-black/70 rounded-border" [style]="{ left: '4px', top: '4px' }">
-                                            <p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>
-                                        </div>
-                                    </div>
+                    <div class="grid grid-cols-12 gap-4 items-stretch">
+                        <div
+                            *ngFor="let item of items; let i = index"
+                            class="col-span-12 sm:col-span-6 xl:col-span-4 p-2 flex"
+                        >
+                            <div
+                            class="p-6 border w-full border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col h-full"
+                            >
+                            <div class="flex justify-center rounded p-6 h-[10rem]">
+                                <div class="relative mx-auto">
+                                <img
+                                    class="rounded w-full"
+                                    [src]="item.img"
+                                    [alt]="item.name"
+                                    style="max-width: 300px"
+                                />
                                 </div>
-                                <div class="pt-12">
-                                    <div class="flex flex-row justify-between items-start gap-2">
-                                        <div>
-                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category }}</span>
-                                            <div class="text-lg font-medium mt-1">{{ item.name }}</div>
-                                            <!-- <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ 'hesham - portsaid' }}</span> -->
-                                        </div>
-                                        <div class="flex flex-col gap-2 items-center">
-                                        <div class="bg-surface-100 p-1" style="border-radius: 30px">
-                                            <div
-                                                class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
-                                                style="
-                                                    border-radius: 30px;
-                                                    box-shadow:
-                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.04),
-                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
-                                                "
-                                            >
-                                                <span class="text-surface-900 font-medium text-sm">{{ item.rating }}</span>
-                                                <i class="pi pi-star-fill text-yellow-500"></i>
-                                            </div>
-                                        </div>
-                                        <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ 'Hesham - Portsaid' }}</span>
-                                          </div>
-                                    </div>
-                                    <div class="flex flex-col gap-6 mt-6">
-                                        <div>
-                                            <span class="text-xl font-semibold">$ {{ item.price }}</span>
-                                            <del class="text-xl font-semibold mx-4">$ {{ item.price }}</del>
-                                        </div>
-                                        <div class="flex gap-2">
-                                            <p-button icon="pi pi-shopping-cart" label="Buy Now" [disabled]="item.inventoryStatus === 'OUTOFSTOCK'" class="flex-auto whitespace-nowrap" styleClass="w-full"></p-button>
-                                            <p-button icon="pi pi-heart" styleClass="h-full" [outlined]="true"></p-button>
-                                        </div>
-                                    </div>
+                            </div>
+
+                            <div class="pt-12 flex flex-col justify-between flex-grow">
+                                <div class="flex flex-row justify-between items-start gap-2">
+                                <div>
+                                    <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{
+                                    item.category_name
+                                    }}</span>
+                                    <div class="text-lg font-medium mt-1">{{ item.name }}</div>
+                                    <span
+                                    class="font-medium text-surface-500 dark:text-surface-400 text-sm"
+                                    >hesham - portsaid</span
+                                    >
                                 </div>
+
+                                <div class="flex flex-col gap-2 items-center">
+                                    <div class="bg-surface-100 p-1 rounded-[30px]">
+                                    <div
+                                        class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2 rounded-[30px] shadow-sm"
+                                    >
+                                        <span class="text-surface-900 font-medium text-sm">{{
+                                        item.rating
+                                        }}</span>
+                                        <i class="pi pi-star-fill text-yellow-500"></i>
+                                    </div>
+                                    </div>
+                                    <span
+                                    class="font-medium text-surface-500 dark:text-surface-400 text-sm"
+                                    >{{ item.supplier_name + ' - ' + item.city_name }}</span
+                                    >
+                                </div>
+                                </div>
+
+                                <div class="flex flex-col gap-6 mt-6">
+                                <div
+                                    class="flex justify-between items-center sm:flex-col sm:flex-col-reverse sm:items-start sm:gap-2 md:flex-row"
+                                >
+                                    <div>
+                                    <p class="text-xl font-semibold whitespace-nowrap">
+                                        {{ item.price }} LE
+                                    </p>
+                                    </div>
+                                    <p-tag
+                                    [value]="item.status"
+                                    [severity]="getSeverity(item.status)"
+                                    ></p-tag>
+                                </div>
+
+                                <div class="flex gap-2">
+                                    <p-button
+                                    icon="pi pi-shopping-cart"
+                                    label="Add to Cart"
+                                    class="flex-auto whitespace-nowrap"
+                                    styleClass="w-full"
+                                    (click)="buy(item, i)"
+                                    ></p-button>
+
+                                    <p-button *ngIf="favo"
+                                        [icon]="item.favorite ? 'pi pi-heart-fill': 'pi pi-heart' "
+                                        [text]="item.favorite "
+                                        [outlined]="true"
+                                        styleClass="h-full"
+                                        (click)="markAsFavorite(item , i)">
+                                    </p-button>
+                                </div>
+                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -160,5 +195,5 @@
     </div>
 
     <div class="card flex justify-center">
-    <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="120" [rowsPerPageOptions]="[10, 20, 30]" />
+    <p-paginator (onPageChange)="onPageChange($event)" [rows]="'10'" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10]" />
 </div>

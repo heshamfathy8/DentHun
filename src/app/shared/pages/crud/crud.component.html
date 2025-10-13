@@ -1,22 +1,23 @@
         <p-toolbar styleClass="mb-6" *ngIf="Header">
             <ng-template #start>
                 <p-button  label="New" icon="pi pi-plus" severity="primary" class="mr-2" (onClick)="openNew()" *ngIf="Add" />
-                <p-button *ngIf="Delete" severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length" />
+                <p-button *ngIf="multiDelete" severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length" />
             
             
              <p-select *ngIf="category" [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Categories" class="w-full md:w-75">
-                                <ng-template #selectedItem let-selectedOption>
-                                    <div class="flex items-center gap-2">
-                                    
-                                        <div>{{ selectedOption.name }}</div>
-                                    </div>
-                                </ng-template>
-                                <ng-template let-country #item>
-                                    <div class="flex items-center gap-2">
-                                        <div>{{ country.name }}</div>
-                                    </div>
-                                </ng-template>
+                <ng-template #selectedItem let-selectedOption>
+                    <div class="flex items-center gap-2">
+                    
+                        <div>{{ selectedOption.name }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-country #item>
+                    <div class="flex items-center gap-2">
+                        <div>{{ country.name }}</div>
+                    </div>
+                </ng-template>
              </p-select>
+
             </ng-template>
 
 
@@ -28,32 +29,68 @@
         <p-table
             #dt
             [value]="products()"
-            [rows]="10"
             [columns]="cols"
-            [paginator]="true"
+            [paginator]="paginator"
             [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
             [tableStyle]="{ 'min-width': '75rem' }"
             [(selection)]="selectedProducts"
             [rowHover]="true"
             dataKey="id"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-            [showCurrentPageReport]="true"
-            [rowsPerPageOptions]="[10, 20, 30]"
-            (onPage)="loadPage($event)"
-        >
+            [tableStyle]="{ 'min-width': '50rem' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+            [totalRecords]="totalRecords"
+             [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10]"
+            [rows]="10"
+            [lazy]="true"
+            (onLazyLoad)="loadPage($event.first)"
+            >
+            <!-- [rowsPerPageOptions]="[10, 20, 30]" -->
             <ng-template #caption>
-                <div class="flex items-center justify-between">
-                    <h5 class="m-0">Manage Products</h5>
-                    <p-iconfield>
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+                <!-- العنوان -->
+                    <h5 class="m-0 text-lg font-semibold text-center md:text-left">
+                        Manage Products
+                    </h5>
+
+                    <!-- الفلاتر -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center  gap-3 w-full md:w-auto">
+                        <!-- Date range picker -->
+                        <p-datepicker
+                        class="w-full sm:w-64"
+                        [(ngModel)]="product.rangeDate"
+                        placeholder="Date Range"
+                        showIcon
+                        iconDisplay="input"
+                        dateFormat="yy-mm-dd"
+                        dataType="string"
+                        (ngModelChange)="onGlobalFilter()"
+                        *ngIf="dateRange"
+                        selectionMode="range"
+                        [readonlyInput]="true">
+                        </p-datepicker>
+
+                        <!-- Search input -->
+                        <p-iconfield class="w-full sm:w-64">
                         <p-inputicon styleClass="pi pi-search" />
-                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
-                    </p-iconfield>
+                        <input
+                            pInputText
+                            type="text"
+                            [(ngModel)]="product.search"
+                            (input)="onGlobalFilter()"
+                            placeholder="Search..."
+                            autocomplete="off"
+                            class="w-full"
+                        />
+                        </p-iconfield>
+                    </div>
                 </div>
+
             </ng-template>
             <ng-template #header>
                 <tr>
                     <th style="width: 3rem">
-                        <p-tableHeaderCheckbox />
+                        <p-tableHeaderCheckbox *ngIf="multiDelete" />
                     </th>
                     @for (col of cols; track col) {
 
@@ -65,10 +102,10 @@
                     <th style="min-width: 12rem"></th>
                 </tr>
             </ng-template>
-            <ng-template #body let-product>
+            <ng-template #body let-product let-index="rowIndex">
                 <tr >
                     <td style="width: 3rem">
-                        <p-tableCheckbox [value]="product" />
+                        <p-tableCheckbox [value]="product" *ngIf="multiDelete"/>
                     </td>
                     <td *ngIf="product.name" style="max-width: 20rem">{{ product.name }}</td>
                     <td *ngIf="product.doctor" style="min-width: 8rem">{{ product.doctor }}</td>
@@ -78,8 +115,10 @@
                     <td *ngIf="product.desc">{{ product.desc  }} </td>
                     <td class="text-base"*ngIf="product.price">{{ product.price  }} </td>
                     <td  *ngIf="product.quantity">{{ product.quantity }}</td>
+                     <!-- payments -->
+                     <td *ngIf="product.paid" >{{ product.paid }}</td>
+                     <!-- payments -->
                     <td *ngIf="product.date" >{{ product.date }}</td>
-
                     <td *ngIf="product.category_name">{{ product.category_name }}</td>
                     <td *ngIf="product.rating">
                         <p-rating [(ngModel)]="product.rating" [readonly]="true" />
@@ -87,75 +126,121 @@
                     <td *ngIf="product.status">
                         <p-tag [value]="product.status" [severity]="getSeverity(product.status)" class="mx-auto" />
                     </td>
+
+                   
+                    <td *ngIf="product.remaining" >{{ product.remaining }}</td>
+                     <!-- payments -->
                     
                     <td>
-                        <p-button *ngIf="confirm || Check" severity="success" icon="pi pi-check" class="mr-2" [rounded]="true" [outlined]="true"   />
+                        <p-button *ngIf="confirm || Check" severity="success" icon="pi pi-check" class="mr-2" [rounded]="true" [outlined]="true" (click)="onConfirm(product,index)"  />
                         <p-button *ngIf="view" severity="info" icon="pi pi-eye" class="mr-2" [rounded]="true" [outlined]="true" (click)="route(product)"  />
-                        <p-button  *ngIf="Update" icon="pi pi-pencil"  class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product,product?.id)" />
+                        <p-button  *ngIf="Update" icon="pi pi-pencil"  class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product,index)" />
                         <p-button *ngIf="Pending" icon="pi pi-history" severity="warn"  class="mr-2" [rounded]="true" [outlined]="true"  />
-                        <p-button *ngIf="confirm" icon="pi pi-times"  severity="danger" class="mr-2" [rounded]="true" [outlined]="true"   />
-                        <p-button *ngIf="Delete" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteProduct(product)"  />
+                        <p-button *ngIf="confirm" icon="pi pi-times"  severity="danger" class="mr-2" [rounded]="true" [outlined]="true"  (click)="onCancel(product,index)" />
+                        <p-button *ngIf="Delete" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteProduct(product ,index)"  />
                     </td>
                 </tr>
             </ng-template>
         </p-table>
 
-        <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true">
-            <ng-template #content>
-                <div class="flex flex-col gap-6">
-                    <img [src]="imageURL" [alt]="product.name" class="block w-50 m-auto pb-4" *ngIf="product.img" />
-                    <div>
-                        <label for="name" class="block font-bold mb-3">Name</label>
-                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus fluid />
-                        <small class="text-red-500" *ngIf="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div>
-                        <label for="desc" class="block font-bold mb-3">Description</label>
-                        <textarea id="desc" pTextarea [(ngModel)]="product.desc" required rows="3" cols="20" fluid></textarea>
-                    </div>
+        <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true" >
+             <ng-container [ngSwitch]="dialogType">
 
-                    <div>
-                        <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="100000000" (onSelect)="onUpload($event)" />
-                    </div>
-
-                    <!-- <div>
-                        <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-                        <p-select [(ngModel)]="product.inventoryStatus" inputId="inventoryStatus" [options]="statuses" optionLabel="label" optionValue="label" placeholder="Select a Status" fluid />
-                    </div> -->
-
-                    <div>
-                        <span class="block font-bold mb-4">Category</span>
-                        <!-- <p-select
-                         [options]="categories" [(ngModel)]="product.category" optionValue="id" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" [showClear]="true"
-                         /> -->
-
-                        <div class="grid grid-cols-12 gap-4">
-                            <div *ngFor=" let category of categories" class="flex items-center gap-2 col-span-6"  >
-                                <p-radiobutton  [value]="category.id" [(ngModel)]="product.category_id" />
-                                <label for="category1">{{category.name}}</label>
+                <ng-container *ngSwitchCase="'products'">
+                    <ng-template #content>
+                        <div class="flex flex-col gap-6">
+                            <img [src]="imageURL" [alt]="product.name" class="block w-50 m-auto pb-4" *ngIf="product.img" />
+                            <div>
+                                <label for="name" class="block font-bold mb-3">Name</label>
+                                <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus fluid />
+                                <small class="text-red-500" *ngIf="submitted && !product.name">Name is required.</small>
                             </div>
-                          
+                            <div>
+                                <label for="desc" class="block font-bold mb-3">Description</label>
+                                <textarea id="desc" pTextarea [(ngModel)]="product.desc" required rows="3" cols="20" fluid></textarea>
+                            </div>
+    
+                            <div>
+                                <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="100000000" (onSelect)="onUpload($event)" />
+                            </div>
+    
+                            <!-- <div>
+                                <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
+                                <p-select [(ngModel)]="product.inventoryStatus" inputId="inventoryStatus" [options]="statuses" optionLabel="label" optionValue="label" placeholder="Select a Status" fluid />
+                            </div> -->
+    
+                            <div>
+                                <span class="block font-bold mb-4">Category</span>
+                                <!-- <p-select
+                                [options]="categories" [(ngModel)]="product.category" optionValue="id" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" [showClear]="true"
+                                /> -->
+    
+                                <div class="grid grid-cols-12 gap-4">
+                                    <div *ngFor=" let category of categories" class="flex items-center gap-2 col-span-6"  >
+                                        <p-radiobutton  [inputId]="'category-' + category.id" [value]="category.id" [(ngModel)]="product.category_id" />
+                                        <label [for]="'category-' + category.id">{{category.name}}</label>
+                                    </div>
+                                
+                                </div>
+                            </div>
+    
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-6">
+                                    <label for="price" class="block font-bold mb-3">Price</label>
+                                    <p-inputnumber id="price" required [(ngModel)]="product.price"   fluid />
+                                    <small class="text-red-500" *ngIf="submitted && !product.name">Price is required.</small>
+                                </div>
+                                <div class="col-span-6">
+                                    <label for="quantity" class="block font-bold mb-3">Quantity</label>
+                                    <p-inputnumber id="quantity" required [(ngModel)]="product.quantity" fluid />
+                                    <small class="text-red-500" *ngIf="submitted && !product.name">Quantity is required.</small>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </ng-template>
+                </ng-container>
 
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-6">
-                            <label for="price" class="block font-bold mb-3">Price</label>
-                            <p-inputnumber id="price" [(ngModel)]="product.price"   fluid />
-                            <small class="text-red-500" *ngIf="submitted && !product.name">Price is required.</small>
+                <ng-container *ngSwitchCase="'payments'">
+                    <ng-template #content>
+                        <div class="flex flex-col gap-6">
+                           
+                          
+                            <div *ngIf="!isEdit">
+                                <label  class="block font-bold mb-3">Name</label>
+                                <p-select [(ngModel)]="product.doctor_id"  [options]="doctors" optionLabel="name" optionValue="id" placeholder="Select a Doctor" fluid />
+                            </div>
+                            <div >
+                                <label for="price" class="block font-bold mb-3">Payment</label>
+                                <p-inputnumber id="price" placeholder="Payment" required [(ngModel)]="product.paid"   fluid />
+                            </div>
+                            <div >
+                                    <label for="price" class="block font-bold mb-3">Date</label>
+                                    <p-datepicker
+                                        [dateFormat]="'yy-mm-dd'"  
+                                        [(ngModel)]="product.date"
+                                        placeholder="dd/mm/yy"
+                                        [showIcon]="true"
+                                        [dataType]="'string'"
+                                        iconDisplay="input"
+                                        (ngModelChange)="log(product)"
+                                        [showButtonBar]="true"
+                                        class="w-full"
+                                        appendTo="body"
+                                    ></p-datepicker>
+                                </div>
                         </div>
-                        <div class="col-span-6">
-                            <label for="quantity" class="block font-bold mb-3">Quantity</label>
-                            <p-inputnumber id="quantity" [(ngModel)]="product.quantity" fluid />
-                            <small class="text-red-500" *ngIf="submitted && !product.name">Quantity is required.</small>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
+                    </ng-template>
+                </ng-container>
+            </ng-container>
 
             <ng-template #footer>
                 <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
-                <p-button label="Save" icon="pi pi-check" (click)="saveProduct()" />
+                <p-button label="Save" icon="pi pi-check" (click)="saveProduct()"
+                 [disabled]="!(
+                                (product.name && product.desc && product.category_id && product.price && product.quantity) ||
+                                (product.paid && product.date && ( product.doctor_id || isEdit))
+                            )"
+                />
             </ng-template>
         </p-dialog>
 

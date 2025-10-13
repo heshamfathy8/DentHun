@@ -19,7 +19,7 @@ import { FormlyPrimengMultiselectComponent } from './shared/components/formly-cu
 import { RepeatTypeComponent } from './shared/components/formly-customTypes/repeat-type/repeat-type.component';
 import { FloatLabelLargeInputComponent } from '@shared/components/formly-customTypes/floatlabel-large-input.type';
 import { FloatlabelDatepickerTypeComponent } from '@shared/components/formly-customTypes/floatlabel-datepicker.type';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { errorInterceptor } from '../../error.interceptor';
 import { Intercepter } from './core/interceptors/interceptor';
 
@@ -33,9 +33,21 @@ export const appConfig: any = {
   importProvidersFrom(
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    FormlyModule.forRoot({
-      // types + validators زي ما عندك
-    }),
+   FormlyModule.forRoot({
+        types: [
+          { name: 'custom-file', component: CustomFileTypeComponent },
+          { name: 'multiselect', component: FormlyPrimengMultiselectComponent },
+          { name: 'repeat', component: RepeatTypeComponent },
+          { name: 'floatlabel-large', component: FloatLabelLargeInputComponent },
+          { name: 'floatlabel-datepicker', component: FloatlabelDatepickerTypeComponent },
+        ],
+        validators: [
+          // لو عندك validators custom ضيفها هنا
+        ],
+        wrappers: [
+          // wrappers custom لو موجودة
+        ]
+      }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -49,6 +61,7 @@ export const appConfig: any = {
   ),
 
   MessageService,
+  ConfirmationService,
   { provide: HTTP_INTERCEPTORS, useClass: Intercepter, multi: true },
 
   // HttpClient (حط كل الإضافات في provideHttpClient واحد)

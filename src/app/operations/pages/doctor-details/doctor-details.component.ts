@@ -1,49 +1,45 @@
+import { DoctorService } from './../../services/doctor.service';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TableModule } from 'primeng/table';
+import { PaymentsComponent } from "../payments/payments.component";
+import { OrdersComponent } from "../orders/orders.component";
+import { CrudComponent } from '@shared/pages/crud/crud.component';
 
 
 @Component({
   selector: 'app-doctor-details',
-  imports: [TableModule,CommonModule],
+  imports: [TableModule, CommonModule, PaymentsComponent, OrdersComponent],
   templateUrl: './doctor-details.component.html',
   styleUrl: './doctor-details.component.scss'
 })
 export class DoctorDetailsComponent {
-products = [
-  {
-    name : "hesham",
-    payment : "12000",
-    date : "5-8-2025",
-    city : "cairo",
-    address : "5th salah-selem",
-    phone : "01052484965",
-  },
-  {
-    name : "hesham",
-    payment : "12000",
-    date : "5-8-2025",
-    city : "cairo",
-    address : "5th salah-selem",
-    phone : "01052484965",
-  },
-  {
-    name : "hesham",
-    payment : "12000",
-    date : "5-8-2025",
-    city : "cairo",
-    address : "5th salah-selem",
-    phone : "01052484965",
-  },
-  {
-    name : "hesham",
-    payment : "12000",
-    date : "5-8-2025",
-    city : "cairo",
-    address : "5th salah-selem",
-    phone : "01052484965",
-  },
 
+  route = inject(ActivatedRoute)
+  doctorService = inject(DoctorService)
+  filter
+  id
+  doctor
+  orders =[]
+  payments =[]
+
+constructor() {
+ this.route.paramMap.subscribe(params => {
+    this.id = params.get('id');
+      this.filter = { id: this.id };
+      console.log('✅ Filter set:', this.filter);
+  });
+}
+ngOnInit() {
+ this.loadData(this.id)
+}
  
-]
+  loadData(id){
+    this.doctorService.getDoctorDetails(id).subscribe(res =>{
+      this.doctor = res['data'].doctor
+    })
+  }
+
+
 }

@@ -4,3 +4,22 @@
 ::ng-deep .new button{
     margin-bottom: 1rem;
 }
+::ng-deep p-table .p-datatable-tbody > tr > td , ::ng-deep p-table .p-datatable-thead > tr > th{
+    text-align: center;
+}
+::ng-deep p-table .p-datatable-tbody > tr > td:is(:nth-child(1), :nth-child(2)),
+::ng-deep p-table .p-datatable-thead > tr > th:is(:nth-child(1), :nth-child(2)){
+    text-align: start;
+}
+// ::ng-deep p-table #pn_id_4-table > tbody > tr{
+//       background-color: var(--p-button-secondary-background);
+// }
+::ng-deep .p-confirmdialog .p-confirmdialog-icon.pi-check-circle {
+  color: #22c55e ; 
+}
+::ng-deep .p-confirmdialog .p-confirmdialog-icon.pi-exclamation-circle.orange {
+  color: rgb(238, 157, 7) ; 
+}
+::ng-deep .p-confirmdialog .p-confirmdialog-icon.pi-exclamation-triangle.red {
+  color:#b91c1c;
+}

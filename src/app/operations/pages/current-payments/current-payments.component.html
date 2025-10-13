@@ -1,8 +1,10 @@
 
  <app-crud
     #Crud
-    [products]="products"
-    [confirm]="true"
-    [Update]="false"
+    [products]="payments"
+    [paginator]="false"
+ 
+    [confirm]="role == 'doctor'"
     [cols]="cols"
+    (DataChange)="DataChange($event)"
   ></app-crud>

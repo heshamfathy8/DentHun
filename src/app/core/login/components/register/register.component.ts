@@ -31,8 +31,14 @@ export class RegisterComponent {
   address
  password
   checked
+  city_id
   department_id
 roles
+Cities = [{
+  name : 'port',
+  id : 333,
+}]
+workingHours: any;
 constructor(
     private loginService: LoginService,
     private router: Router,
@@ -40,6 +46,7 @@ constructor(
   ) {}
   ngOnInit(){
     this.getRoles()
+    this.getCites()
   }
    
   register(formValue){
@@ -57,6 +64,13 @@ constructor(
      this.loginService.getRoles().subscribe({
       next:(res:any)=>{
         this.roles = res.data
+      },
+    })
+  }
+  getCites(){
+     this.loginService.getRoles().subscribe({
+      next:(res:any)=>{
+        this.Cities = res.data
       },
     })
   }

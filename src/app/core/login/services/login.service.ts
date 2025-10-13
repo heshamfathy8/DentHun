@@ -57,4 +57,7 @@ export class LoginService {
   getRoles(){
     return this.httpClient.get(this.baseUrl+'department/index');
   }
+  getCites(){
+    return this.httpClient.get(this.baseUrl+'city/index');
+  }
 }
