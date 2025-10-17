@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ProductService } from '@login/services/product.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -14,28 +14,34 @@ import { TableModule, TableRowExpandEvent, TableRowCollapseEvent } from 'primeng
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-package',
-  imports: [TableModule, TagModule, ToastModule, RatingModule, ButtonModule, CommonModule,ConfirmDialogModule,DialogModule, InputNumberModule,InputTextModule,FormsModule,TooltipModule],
-  providers: [ProductService, MessageService ,ConfirmationService],
+  imports: [TableModule, TagModule, ToastModule, RatingModule,ToggleSwitchModule, ButtonModule, CommonModule,ConfirmDialogModule,DialogModule, InputNumberModule,InputTextModule,FormsModule,TooltipModule],
+  providers: [ProductService, MessageService ,ConfirmationService,RouterModule],
   templateUrl: './package.component.html',
   styleUrl: './package.component.scss'
 })
 export class PackageComponent {
 
      @Input() products: any = signal([])
+    @Input() ButBtnName: any
     @Input() Add: any
+    @Input() favo: any
     @Input() Pending: any
     @Input() Refound: any
     @Input() Delete: any
+    @Input() miniDelete: any
     @Input() Update: any
+    @Input() miniUpdate: any
     @Input() filter: any = {}
      @Input() totalRecords 
     @Input() showStatus: any
     @Input() cols!: any[];
     @Input() confirm!: any;
     @Input() Buy: any;
+    @Input() activation: any;
     @Output() DataChange = new EventEmitter<any>();
 
 
@@ -43,6 +49,7 @@ export class PackageComponent {
   oldProduct:any
   product: any;
   order
+  unActivate
   hideDialog: any;
   productDialog: boolean;
 
@@ -52,12 +59,8 @@ export class PackageComponent {
     expandAll() {
         this.expandedRows = this.products().reduce((acc, p) => (acc[p.id] = true) && acc, {});
     }
-        ngOnInit(){
-            setTimeout(() => {
-                console.log( this.products());
-                
-            }, 2000);
-        }
+    
+      
     collapseAll() {
         this.expandedRows = {};
     }
@@ -91,7 +94,6 @@ export class PackageComponent {
     openNew(){
         this.router.navigateByUrl('/operations/create-package')
     }
-    
     editProduct(product ,order) {
         this.product = { ...product };
         this.oldProduct = product
@@ -119,7 +121,7 @@ export class PackageComponent {
                 outlined: true,
             },
             accept: () => {
-                this.DataChange.emit({name:'delete order' , order : order , index : index ,i:i})
+                this.DataChange.emit({name:'delete order' , order : order , index : index , i : i })
 
             }
         });
@@ -145,6 +147,9 @@ export class PackageComponent {
 
             }
         });
+    }
+    activate(order){
+          this.DataChange.emit({name:'activate' , order :order  })
     }
     pendOrder(order){
          this.confirmationService.confirm({
@@ -191,6 +196,10 @@ export class PackageComponent {
     }
     markAsFavorite(product ,index){
          this.DataChange.emit({name : "favorite" , product : product , index : index})
+    }
+    navigate(routePath,id){
+        this.router.navigate(routePath, {queryParams : {id:id}})
+
     }
 
 }

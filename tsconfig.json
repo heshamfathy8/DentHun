@@ -14,28 +14,56 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": ["ES2022", "dom"],
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
     "paths": {
-      "@public/*": ["app/public/*"],
-      "@public-pages/*": ["app/public/pages/*"],
-      "@public-components/*": ["app/public/components/*"],
-      "@public-services/*": ["app/public/services/*"],
-      "@admin/*": ["app/admin/*"],
-      "@admin-components/*": ["app/admin/components"],
-      "@admin-pages/*": ["app/admin/pages"],
-      "@admin-services/*": ["app/admin/services"],
-      "@services/*": ["app/services/*"],
-      "@login/*": ["app/core/login/*"],
-      "@shared/*": ["app/shared/*"],
-      "@department/*": ["app/features/department/*"],
-      "@operations/*": ["app/operations/*"]
+      "@public/*": [
+        "app/public/*"
+      ],
+      "@public-pages/*": [
+        "app/public/pages/*"
+      ],
+      "@public-components/*": [
+        "app/public/components/*"
+      ],
+      "@public-services/*": [
+        "app/public/services/*"
+      ],
+      "@admin/*": [
+        "app/admin/*"
+      ],
+      "@admin-components/*": [
+        "app/admin/components"
+      ],
+      "@admin-pages/*": [
+        "app/admin/pages"
+      ],
+      "@admin-services/*": [
+        "app/admin/services"
+      ],
+      "@services/*": [
+        "app/services/*"
+      ],
+      "@login/*": [
+        "app/core/login/*"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "@department/*": [
+        "app/features/department/*"
+      ],
+      "@operations/*": [
+        "app/operations/*"
+      ]
     }
   },
   "angularCompilerOptions": {

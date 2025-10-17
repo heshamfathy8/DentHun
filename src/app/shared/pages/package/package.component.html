@@ -21,40 +21,41 @@
                 <th style="width: 5rem"></th>
                 <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
                 <th>Image</th>
-                <th pSortableColumn="total_order_price">Total Price <p-sortIcon field="total_order_price" /></th>
+                <th pSortableColumn="total_order_price">Total Price <p-sortIcon field="total_price" /></th>
                 <th pSortableColumn="created_at">Date <p-sortIcon field="created_at" /></th>
-                <th pSortableColumn="statuts">Status <p-sortIcon field="statuts" /></th>
+                <th pSortableColumn="statuts"  *ngIf="products()[0]?.status">Status <p-sortIcon field="statuts"/></th>
                 <th pSortableColumn="notes">Notes <p-sortIcon field="notes" /></th>
-                <th></th>
+                <th class=""></th>
             </tr>
         </ng-template>
         <ng-template #body let-order let-index="rowIndex" let-expanded="expanded">
-            <tr>
+            <tr [ngClass]="{ 'bg-surface-ground' : !order.checked  }">
                 <td>
                     <p-button type="button" pRipple [pRowToggler]="order" [text]="true" [rounded]="true" [plain]="true"
                         [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                 </td>
-                <td>{{ order.doctor_name }}</td>
-                <td class="flex justify-center gap-2">
+                <td>{{ order.name  }}</td>
+                <td class="flex justify-center items-center gap-2">
                     <img *ngFor="let product of order?.products" [src]=" product?.img" [alt]="product?.name" width="50"
                         class="shadow-lg" />
                 </td>
-                <td>{{ order.total_order_price }}</td>
+                <td>{{ order.total_price }}</td>
                 <td>{{ order.created_at }}</td>
-                <td>
-                    <p-tag [value]="order?.status" [severity]="getStatusSeverity(order?.status)" class="mx-auto" />
+                <td *ngIf="order?.status">
+                    <p-tag  [value]="order?.status" [severity]="getStatusSeverity(order?.status)" class="mx-auto" />
                 </td>
                 <td>
-                    {{order.notes}}
+                    {{order.notes ??  order.desc}}
                 </td>
                 <td>
+                    <div class="flex justify-center items-center">
                     <!-- doctor actions -->
-                    <p-button *ngIf="Buy" [icon]="order.favorite ? 'pi pi-heart-fill': 'pi pi-heart' "
+                    <p-button *ngIf="favo" [icon]="order.favorite ? 'pi pi-heart-fill': 'pi pi-heart' "
                         [text]="order.favorite " [outlined]="true" styleClass="h-full mr-2"
                         (click)="markAsFavorite(order , index)">
                     </p-button>
                     
-                    <p-button *ngIf="!order.is_added && Buy; else addedTpl" icon="pi pi-shopping-cart" label="Add to Cart"
+                    <p-button *ngIf="!order.is_added && Buy; else addedTpl" icon="pi pi-shopping-cart" [label]="ButBtnName ?? 'Add to Cart'"
                         styleClass="flex-auto md:flex-initial whitespace-nowrap" (click)="buy(order , index)">
                     </p-button>
 
@@ -64,16 +65,26 @@
                         </p-button>
                     </ng-template>
 
+                    <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                        (click)="navigate(['operations/create-package'],order.id)" *ngIf="Update && !order.is_package" />
+
                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
                         (click)="deleteOrder(order,index)" *ngIf="Delete" />
 
                     <!-- supplier actions -->
+                     <p-toggleswitch severity="danger" [(ngModel)]="order.checked" class="mx-2" *ngIf="activation" (ngModelChange)="activate(order)">
+                        <ng-template #handle let-checked="checked">
+                            <i [ngClass]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
+                        </ng-template>
+                    </p-toggleswitch>
+
                     <p-button *ngIf="confirm" severity="success" icon="pi pi-check" class="mr-2" [rounded]="true"
                         [outlined]="true" (click)="acceptOrder(order,index)" />
                     <p-button *ngIf="Pending && order.status !== 'preparing'" icon="pi pi-history" severity="warn"
                         class="mr-2" [rounded]="true" [outlined]="true" (click)="pendOrder(order)" />
                     <p-button *ngIf="confirm" icon="pi pi-times" severity="danger" class="mr-2" [rounded]="true"
                         [outlined]="true" (click)="cancelOrder(order ,index)" />
+                    </div>    
                 </td>
             </tr>
         </ng-template>
@@ -81,7 +92,7 @@
             <tr>
                 <td colspan="7">
                     <div class="p-4">
-                        <h5 class="text-muted-color">Orders for {{ order.doctor_name }}</h5>
+                        <h5 class="text-muted-color">Orders for {{ order.name }}</h5>
                         <p-table [value]="order.products" dataKey="id">
                             <ng-template #header>
             <tr>
@@ -114,9 +125,9 @@
                             (click)="editProduct(product ,order)" *ngIf="Refound" pTooltip="Refound" showDelay="500"
                             tooltipPosition="top" />
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
-                            (click)="editProduct(product ,order)" *ngIf="Update" />
+                            (click)="editProduct(product ,order)" *ngIf="miniUpdate" />
                         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
-                            (click)="deleteOrder(product,index,Pindex)" *ngIf="Delete" />
+                            (click)="deleteOrder(product,index,Pindex)" *ngIf="miniDelete" />
                     </div>
                 </td>
             </tr>

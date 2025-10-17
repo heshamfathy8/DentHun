@@ -9,7 +9,7 @@ import { HighlightNumbersPipe } from "../../shared/pipes/highlight-numbers-pipe.
     selector: 'app-notifications-widget',
     imports: [ButtonModule, MenuModule, CommonModule, HighlightNumbersPipe],
     template: `
-    <div class="card min-h-[90vh]">
+    <div class="card">
         <div class="flex items-center justify-between mb-6">
             <div class="font-semibold text-xl">Notifications</div>
         </div>
@@ -64,7 +64,7 @@ import { HighlightNumbersPipe } from "../../shared/pipes/highlight-numbers-pipe.
                 </span>
             </li>
         </ul>
-        <span class="block text-muted-color font-medium mb-4">LAST WEEK</span>
+        <span class="block text-muted-color font-medium mb-4">Older</span>
         <ul class="p-0 m-0 list-none">
             <li class="flex items-center py-2 border-b border-surface">
                 <div class="w-12 h-12 flex items-center justify-center bg-green-100 dark:bg-green-400/10 rounded-full mr-4 shrink-0">
@@ -91,7 +91,7 @@ export class NotificationsWidget {
         {
             name : "heshajm has paid 15614 LE last week",
             icon : 'dollar',
-            color : 'blue',
+            color : 'pink',
         }
     ]
 }

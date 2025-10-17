@@ -23,3 +23,15 @@
 ::ng-deep .p-confirmdialog .p-confirmdialog-icon.pi-exclamation-triangle.red {
   color:#b91c1c;
 }
+::ng-deep .p-datatable-tbody > tr.bg-surface-ground {
+  background-color: var(--surface-ground)
+}
+:host ::ng-deep .p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+  background-color: #de2777!important;
+  border-color: #de2777!important;
+
+}
+:host ::ng-deep .p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider i{
+  color: #de2777!important;
+
+}

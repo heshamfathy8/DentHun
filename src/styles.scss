@@ -10,6 +10,7 @@ html, body { height: 100%; }
 body { margin: 0;
 font-family: 'Lato', sans-serif;
 }
+
 // label{
 //   color: var(--label);
 // }
@@ -94,7 +95,9 @@ p-checkbox .p-checkbox{
 //  .removeBtn{
 //   margin-top: 30px;
 //  }
-
+.p-tag span{
+  font-size: 14px;
+}
 .error-tip{
      color: #f87171;
      transform: translateY(-10px);

@@ -18,23 +18,23 @@
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
 
           <div>
-            <label class="block mb-1 text-white font-medium">Full Name</label>
-            <input pInputText pSize="large" formControlName="fullName" placeholder="John Doe" class="w-full" />
+            <label class="block mb-1 text-gray-900 dark:text-white font-medium">Full Name</label>
+            <input pInputText pSize="large" [className]="'bg-surface-ground w-full'" formControlName="name" placeholder="John Doe"  />
           </div>
 
           <div>
-            <label class="block mb-1 text-white font-medium">Email</label>
-            <input pInputText pSize="large" formControlName="email" placeholder="example@email.com" class="w-full" />
+            <label class="block mb-1 text-gray-900 dark:text-white font-medium">Email</label>
+            <input pInputText pSize="large" formControlName="email" placeholder="example@email.com"  [className]="'bg-surface-ground w-full'" />
           </div>
 
           <div>
-            <label class="block mb-1 text-white font-medium">Phone</label>
-            <input pInputText pSize="large" formControlName="phone" placeholder="+20 123 456 7890" class="w-full" />
+            <label class="block mb-1 text-gray-900 dark:text-white font-medium">Phone</label>
+            <input pInputText pSize="large" formControlName="phone" placeholder="+20 123 456 7890"  [className]="'bg-surface-ground w-full'" />
           </div>
 
           <div>
-            <label class="block mb-1 text-white font-medium">Address</label>
-            <input pInputText pSize="large" formControlName="address" placeholder="123 Main St, City" class="w-full" />
+            <label class="block mb-1 text-gray-900 dark:text-white font-medium">Address</label>
+            <input pInputText pSize="large" formControlName="address" placeholder="123 Main St, City"  [className]="'bg-surface-ground w-full'" />
           </div>
 
           <!-- Clinic Schedule -->

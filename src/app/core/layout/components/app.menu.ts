@@ -39,6 +39,7 @@ export class AppMenu {
                                 { label: 'Current Orders', icon: 'pi pi-fw pi-send', routerLink: ['/operations/current-orders'],badge:{severity:"primary",value:"3"} },
                                 { label: 'Orders', icon: 'pi pi-fw pi-list', routerLink: ['/operations/orders'] },
                                 { label: 'Store', icon: 'pi pi-fw pi-shop', routerLink: ['/operations/store']},
+                                { label: 'Packages', icon: 'pi pi-shopping-bag', routerLink: ['/operations/packages'] },
                                 { label: 'Receipts', icon: 'pi pi-fw pi-receipt', routerLink: ['/operations/receipts']},
                                 { label: 'Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/operations/reports']},
                                 ]

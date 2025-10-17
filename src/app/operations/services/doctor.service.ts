@@ -75,6 +75,10 @@ export class DoctorService {
       let url = this.baseUrl+'cart/store'
       return this.httpClient.post(url , body);
     }
+    addPackageToCard(id ,data){
+      let url = this.baseUrl+'package/buy/' + id
+      return this.httpClient.post(url,data);
+    }
     markAsFavorite(id){
          let url = this.baseUrl+'favorite-product/add/' + id
          return this.httpClient.get(url);

@@ -74,6 +74,14 @@ export class SupplierService {
         let url = this.baseUrl+'category/index'
         return this.httpClient.get(url);
     }
+  getProfile(){
+        let url = this.baseUrl+'profile/show'
+        return this.httpClient.get(url);
+    }
+  updateProfile(data){
+        let url = this.baseUrl+'profile/update'
+        return this.httpClient.post(url,data);
+    }
   getSuppliers(val){
     let params = new HttpParams()
 
@@ -156,6 +164,10 @@ export class SupplierService {
 
       return this.httpClient.delete(url);
     }
+  deletePackage(order){ // want to update
+    let url = this.baseUrl+'package/delete/' + order.id 
+      return this.httpClient.delete(url);
+    }
   deleteReceipt(id){
      let url = this.baseUrl+'receipt/delete/' + id 
       return this.httpClient.delete(url);
@@ -204,8 +216,21 @@ export class SupplierService {
        let url = this.baseUrl+'order/index-type?page=' + page
         return this.httpClient.get(url);
     }
-    createReceits(page){
-       let url = this.baseUrl+'order/index-type?page=' + page
+ 
+    CreatePackage(data){
+       let url = this.baseUrl+'package/store'
+        return this.httpClient.post(url,data);
+    }
+    updatePackage(data ,id){
+       let url = this.baseUrl+'package/update/' + id
+        return this.httpClient.post(url,data);
+    }
+    getTargetData(id){
+       let url = this.baseUrl+'package/show/'+ id
+        return this.httpClient.get(url);
+    }
+    getSourceData(id){
+       let url = this.baseUrl+'package/remain-products/'+ id
         return this.httpClient.get(url);
     }
     changeOrderStatus(id,status){
@@ -240,7 +265,11 @@ export class SupplierService {
           params = params.set(key, filter[key]);
         }
       })
-        let url = this.baseUrl+'favorite-product/add'
+        let url = this.baseUrl+'package/index'
         return this.httpClient.get(url,{params});
     }  
+    activate(id){
+       let url = this.baseUrl+'package/toggle-status/'+ id
+        return this.httpClient.get(url);
+    }
 }

@@ -63,7 +63,8 @@
       [toggleMask]="true"
       styleClass="w-full md:w-[30rem] mb-2"
       [feedback]="false"
-      required minlength="6"
+      required
+      [minlength]="6"
       #passwordModel="ngModel"
       [ngClass]="{'border-red-500': passwordModel.invalid && (passwordModel.touched || registerForm.submitted)}">
     </p-password>

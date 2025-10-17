@@ -7,7 +7,6 @@ import { CardModule } from 'primeng/card';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
-import { CalendarModule } from 'primeng/calendar';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SupplierService } from '@operations/services/supplier.service';
 import { MessageService } from 'primeng/api';
@@ -47,7 +46,7 @@ export class ProfileComponent {
 
   initForm(){
     this.profileForm = new FormGroup({
-      fullName: new FormControl(''),
+      name: new FormControl(''),
       email: new FormControl(''),
       phone: new FormControl(''),
       address: new FormControl(''),
@@ -56,9 +55,12 @@ export class ProfileComponent {
   }
 
   loadData(){
-    this.supplierService.getCategories().subscribe(res=>{
+    this.supplierService.getProfile().subscribe(res=>{
       console.log(res);
       this.profileForm.patchValue(res['data'])
+        res['data'].schedule.forEach((item,index) => {
+        this.toggleDay(index)
+      });
     })
   }
 
@@ -102,8 +104,10 @@ export class ProfileComponent {
   }
 
   onSubmit() {
+    console.log(this.profileForm.getRawValue());
+    
     let form  = this.ProductService.toFormData(this.profileForm.getRawValue())
-   this.supplierService.search(form).subscribe(res=>{
+   this.supplierService.updateProfile(form).subscribe(res=>{
       console.log(res);
        this.messageService.add({
           severity: 'success',

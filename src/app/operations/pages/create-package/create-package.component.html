@@ -1,18 +1,23 @@
 <div class="card">
     <p-picklist 
+    #picklist
     [source]="sourceProducts"
     [target]="targetProducts"
-    [dragdrop]="true" 
-    [responsive]="true" 
+    [dragdrop]="true"
+    [responsive]="true"
+    filterBy="name"
     sourceFilterPlaceholder="Search by name"
     targetFilterPlaceholder="Search by name"
     breakpoint="1400px"
-    scrollHeight="20rem">
+    scrollHeight="20rem"
+    (onMoveToTarget)="handleMoveToTarget($event)"
+    (onMoveToSource)="handleMoveToSource($event)"
+    >
         <ng-template let-option let-selected="selected" #item>
             <div class="flex flex-wrap p-1 items-center gap-4 w-full">
                 <img
                     class="w-12 shrink-0 rounded"
-                    src="https://primefaces.org/cdn/primeng/images/demo/product/{{ option.image }}"
+                    [src]="option.img "
                     [alt]="option.name"
                 />
                 <div class="flex-1 flex flex-col">
@@ -23,11 +28,21 @@
                             'dark:text-surface-400': !selected,
                             'text-inherit': selected,
                         }"
-                        >{{ option.category }}</span
+                        >{{ option.category_name }}</span
                     >
                 </div>
                 <span class="font-bold sm:ml-8">{{ '$' + option.price }}</span>
             </div>
         </ng-template>
     </p-picklist>
+     
 </div>
+<app-checkout
+[products]="allDroppedProducts"
+[notes]="Pinfo?.desc"
+[initPrice]="Pinfo?.total_price"
+[id]="id"
+[packageName]="Pinfo?.name"
+
+>
+</app-checkout>

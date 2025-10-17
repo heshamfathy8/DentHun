@@ -12,19 +12,19 @@
           <i class="pi pi-search"></i>
         </p-inputicon>
         <input
+        class="w-full sm:w-64"
           pInputText
           type="text"
           placeholder="Search..."
           autocomplete="off"
           (input)="search($event.target['value'])"
-          class="w-full"
         />
       </p-iconfield>
 
       
       <!-- Date range -->
       <p-datepicker
-        class="w-full sm:w-64"
+        class="sm:w-64"
         [(ngModel)]="filter.rangeDate"
         placeholder="Date Range"
         showIcon
@@ -32,6 +32,7 @@
         dateFormat="yy-mm-dd"
         dataType="string"
         (ngModelChange)="onGlobalFilter()"
+        [inputStyleClass]="'w-full sm:w-64'"
         selectionMode="range">
       </p-datepicker>
     </div>

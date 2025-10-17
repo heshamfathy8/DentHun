@@ -43,7 +43,7 @@
                                 [fluid]="true" 
                                 required
                                 size="large"
-                                minlength="6"
+                                [minlength]="6"
                                 #passwordModel="ngModel"
                                 [ngClass]="{'p-invalid border-red-500': passwordModel.invalid && (passwordModel.dirty || loginForm.submitted)}"
                             ></p-password>
