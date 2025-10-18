@@ -10,6 +10,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SupplierService } from '@operations/services/supplier.service';
 import { MessageService } from 'primeng/api';
+import { StyleClass } from "primeng/styleclass";
 
 @Component({
   selector: 'app-profile',
@@ -21,9 +22,9 @@ import { MessageService } from 'primeng/api';
     CardModule,
     FileUploadModule,
     CommonModule,
-     CheckboxModule,
-    DatePickerModule 
-  ],
+    CheckboxModule,
+    DatePickerModule,
+],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -46,6 +47,7 @@ export class ProfileComponent {
 
   initForm(){
     this.profileForm = new FormGroup({
+      img: new FormControl(null),
       name: new FormControl(''),
       email: new FormControl(''),
       phone: new FormControl(''),
@@ -81,10 +83,11 @@ export class ProfileComponent {
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
+    this.profileForm.get('img').patchValue(file)
     if (file) {
       const reader = new FileReader();
-      reader.onload = e => (this.avatarUrl = reader.result as string);
       reader.readAsDataURL(file);
+      reader.onload = e => (this.avatarUrl = reader.result as string);
     }
   }
  toggleDay(index: number) {

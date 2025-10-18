@@ -78,6 +78,10 @@ export class SupplierService {
         let url = this.baseUrl+'profile/show'
         return this.httpClient.get(url);
     }
+  getNotifications(){
+        let url = this.baseUrl+'notification/user'
+        return this.httpClient.get(url);
+    }
   updateProfile(data){
         let url = this.baseUrl+'profile/update'
         return this.httpClient.post(url,data);

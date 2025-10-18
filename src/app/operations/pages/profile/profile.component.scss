@@ -4,3 +4,6 @@ table *{
 table{
     overflow-x: scroll;
 }
+::ng-deep .p-inputtext.bg-surface-ground{
+    background-color: var(--surface-ground);
+}

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { HighlightNumbersPipe } from "../../shared/pipes/highlight-numbers-pipe.pipe";
+import { SupplierService } from '@operations/services/supplier.service';
 
 @Component({
     standalone: true,
@@ -17,7 +18,7 @@ import { HighlightNumbersPipe } from "../../shared/pipes/highlight-numbers-pipe.
         <span class="block text-muted-color font-medium mb-4">TODAY</span> 
         <ul class="p-0 mx-0 mt-0 mb-6 list-none">
          <li
-            *ngFor="let noti of notifications"
+            *ngFor="let noti of notifications.today"
             class="flex items-center py-2 border-b border-surface"
             >
             <div
@@ -30,68 +31,66 @@ import { HighlightNumbersPipe } from "../../shared/pipes/highlight-numbers-pipe.
                 <i class="pi !text-xl" [ngClass]="['pi-'+noti.icon  ,'text-' + noti.color + '-500']"></i>
             </div>
 
-            <p class="text-surface-900 dark:text-surface-0 leading-normal" [innerHTML]="noti.name | highlightNumbers">
-                
+            <p class="text-surface-900 dark:text-surface-0 leading-normal" [innerHTML]="noti.content | highlightNumbers">
             </p>
         </li>
-
-            <li class="flex items-center py-2">
-                <div class="w-12 h-12 flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-full mr-4 shrink-0">
-                    <i class="pi pi-download !text-xl text-orange-500"></i>
-                </div>
-                <span class="text-surface-700 dark:text-surface-100 leading-normal">Your request for withdrawal of <span class="text-primary font-bold">$2500.00</span> has been initiated.</span>
-            </li>
         </ul>
 
         <span class="block text-muted-color font-medium mb-4">YESTERDAY</span>
         <ul class="p-0 m-0 list-none mb-6">
-            <li class="flex items-center py-2 border-b border-surface">
-                <div class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
-                    <i class="pi pi-dollar !text-xl text-blue-500"></i>
-                </div>
-                <span class="text-surface-900 dark:text-surface-0 leading-normal"
-                    >Keyser Wick
-                    <span class="text-surface-700 dark:text-surface-100">has purchased a black jacket for <span class="text-primary font-bold">$59.00</span></span>
-                </span>
-            </li>
-            <li class="flex items-center py-2 border-b border-surface">
-                <div class="w-12 h-12 flex items-center justify-center bg-pink-100 dark:bg-pink-400/10 rounded-full mr-4 shrink-0">
-                    <i class="pi pi-question !text-xl text-pink-500"></i>
-                </div>
-                <span class="text-surface-900 dark:text-surface-0 leading-normal"
-                    >Jane Davis
-                    <span class="text-surface-700 dark:text-surface-100">has posted a new questions about your product.</span>
-                </span>
-            </li>
+             <li
+            *ngFor="let noti of notifications.yesterday"
+            class="flex items-center py-2 border-b border-surface"
+            >
+            <div
+                class="w-12 h-12 flex items-center justify-center rounded-full mr-4 shrink-0"
+                [ngClass]="[
+                'bg-' + noti.color + '-100',
+                'dark:bg-' + noti.color + '-400/10'
+                ]"
+            >
+                <i class="pi !text-xl" [ngClass]="['pi-'+noti.icon  ,'text-' + noti.color + '-500']"></i>
+            </div>
+
+            <p class="text-surface-900 dark:text-surface-0 leading-normal" [innerHTML]="noti.content | highlightNumbers">
+            </p>
+        </li>
         </ul>
         <span class="block text-muted-color font-medium mb-4">Older</span>
         <ul class="p-0 m-0 list-none">
-            <li class="flex items-center py-2 border-b border-surface">
-                <div class="w-12 h-12 flex items-center justify-center bg-green-100 dark:bg-green-400/10 rounded-full mr-4 shrink-0">
-                    <i class="pi pi-arrow-up !text-xl text-green-500"></i>
-                </div>
-                <span class="text-surface-900 dark:text-surface-0 leading-normal">Your revenue has increased by <span class="text-primary font-bold">%25</span>.</span>
-            </li>
-            <li class="flex items-center py-2 border-b border-surface">
-                <div class="w-12 h-12 flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-full mr-4 shrink-0">
-                    <i class="pi pi-heart !text-xl text-purple-500"></i>
-                </div>
-                <span class="text-surface-900 dark:text-surface-0 leading-normal"><span class="text-primary font-bold">12</span> users have added your products to their wishlist.</span>
-            </li>
+             <li
+            *ngFor="let noti of notifications.older"
+            class="flex items-center py-2 border-b border-surface"
+            >
+            <div
+                class="w-12 h-12 flex items-center justify-center rounded-full mr-4 shrink-0"
+                [ngClass]="[
+                'bg-' + noti.color + '-100',
+                'dark:bg-' + noti.color + '-400/10'
+                ]"
+            >
+                <i class="pi !text-xl" [ngClass]="['pi-'+noti.icon  ,'text-' + noti.color + '-500']"></i>
+            </div>
+
+            <p class="text-surface-900 dark:text-surface-0 leading-normal" [innerHTML]="noti.content | highlightNumbers">
+            </p>
+        </li>
         </ul>
     </div>`
 })
 export class NotificationsWidget {
-    items = [
-        { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-        { label: 'Remove', icon: 'pi pi-fw pi-trash' }
-    ];
 
-    notifications = [
-        {
-            name : "heshajm has paid 15614 LE last week",
-            icon : 'dollar',
-            color : 'pink',
-        }
-    ]
+    supplierService = inject(SupplierService)
+    notifications
+
+    ngOnInit(){
+     this.loadData()
+    }
+
+    loadData(){
+        this.supplierService.getNotifications().subscribe(res=>{
+            this.notifications = res['data']
+        })
+    }
+
 }
