@@ -1,3 +1,4 @@
+import { TieredMenuModule } from 'primeng/tieredmenu';
 import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router, RouterModule } from '@angular/router';
@@ -10,7 +11,7 @@ import { MenuModule } from 'primeng/menu';
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, MenuModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, MenuModule,TieredMenuModule],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -58,24 +59,30 @@ import { MenuModule } from 'primeng/menu';
                         <i class="pi pi-heart"></i>
                          <span>Favorites</span>
                     </button>
-                    <button type="button" (click)="menu.toggle($event)" class="layout-topbar-action " >
+                    <button type="button" (click)="menu.toggle($event)" class="layout-topbar-action !hidden lg:!block" >
                         <i class="pi pi-user"></i>
                         <span>Profile</span>
                     </button>
-                    <p-menu #menu [model]="items" [popup]="true" appendTo="body"/>
+                   
+                    <p-tieredMenu
+                        [model]="items"
+                        [popup]="false"
+                        class="w-full border-0 shadow-none bg-transparent lg:hidden">
+                        </p-tieredMenu>
                 </div>
             </div>
         </div>
     </div>
     
     
-    
+     <p-menu #menu [model]="items" [popup]="true" appendTo="body"/>
     
     `
 })
 export class AppTopbar {
  items = [
              {
+                icon: 'pi pi-user',
                 label: 'Profile',
                 items: [
                     {

@@ -1,15 +1,10 @@
 <section class="card  antialiased" id="card">
     <div class="max-w-screen-2x px-4 mx-auto 2xl:px-0">
       <div class="lg:grid xl:grid-cols-2 lg:gap-8 xl:gap-16">
-        <div class=" mx-auto">
-           <div class="card !p-0 m-[2rem] relative group" id="card">
+        <div class=" mx-auto w-[75%]">
+           <div class="card w-full !p-0 m-[2rem] relative group" id="card">
             <!-- <div class="font-semibold text-xl mb-4">Galleria</div> -->
-            <p-image class="w-full hover:none" src="https://cdn11.bigcommerce.com/s-wolrxh284p/images/stencil/608x608/products/4992/3422/METAPASTE_CALCIUM_HYDROXIDE_WITH_BARIUM_SULFATE_-_META_BIOMED_2__08888.1565020450.png?c=2" alt="Image" [preview]="true" />
-
-             <i
-              class="pi pi-eye absolute  m-auto text-white  opacity-0 group-hover:opacity-100 top-[50%] left-[50%] transition-opacity duration-800"
-              style="font-size: 1.5rem"
-            ></i>
+            <p-image class="w-full" [src]="product?.img" alt="Image" [preview]="true" />
 
         </div>
         </div>
@@ -18,14 +13,13 @@
           <h1
             class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"
           >
-            Apple iMac 24" All-In-One Computer, Apple M1, 8GB RAM, 256GB SSD,
-            Mac OS, Pink
+           {{product?.name }}
           </h1>
           <div class="mt-4 sm:items-center sm:gap-4 sm:flex">
             <p
               class="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white"
             >
-              $1,249.99
+               {{ product?.price }} EGP
             </p>
 
             <div class="flex items-center gap-2 mt-2 sm:mt-0">
@@ -111,19 +105,19 @@
           </div>
 
           <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-            <a
-              href="#"
-              title=""
+            <button
+              (click)="markAsFavorite(product)"
               class="flex items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
               role="button"
             >
               <svg
-                class="w-5 h-5 -ms-2 me-2"
+                class="w-5 h-5 -ms-2 me-2 "
+                [ngClass]="{'text-primary-500' : product?.favorite}"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
-                fill="none"
+                [attr.fill]=" product?.favorite ?  'currentColor' : 'none'"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -135,11 +129,10 @@
                 />
               </svg>
               Add to favorites
-            </a>
+            </button>
 
-            <a
-              href="#"
-              title=""
+            <button
+              (click)="addToCard(product)"
               class="text-white mt-4 sm:mt-0 bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 flex items-center justify-center"
               role="button"
             >
@@ -162,22 +155,15 @@
               </svg>
 
               Add to cart
-            </a>
+            </button>
           </div>
 
           <hr class="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
 
           <p class="mb-6 text-gray-500 dark:text-gray-400">
-            Studio quality three mic array for crystal clear calls and voice
-            recordings. Six-speaker sound system for a remarkably robust and
-            high-quality audio experience. Up to 256GB of ultrafast SSD storage.
+            {{product?.desc}}
           </p>
 
-          <p class="text-gray-500 dark:text-gray-400">
-            Two Thunderbolt USB 4 ports and up to two USB 3 ports. Ultrafast
-            Wi-Fi 6 and Bluetooth 5.0 wireless. Color matched Magic Mouse with
-            Magic Keyboard or Magic Keyboard with Touch ID.
-          </p>
         </div>
       </div>
     </div>

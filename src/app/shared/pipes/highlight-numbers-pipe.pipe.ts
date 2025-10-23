@@ -13,10 +13,9 @@ export class HighlightNumbersPipe implements PipeTransform {
 
     // يلوّن الرقم والعملة بدون تعديل المسافة اللي بينهم
     const highlighted = value.replace(
-      /(\d+\s*)/gi,
-      `<span class="text-primary">$1</span>`
-    );
-
+     /([#\d]+)/g,
+  `<span class="text-primary">$1</span>`
+);
     return this.sanitizer.bypassSecurityTrustHtml(highlighted);
   }
   }

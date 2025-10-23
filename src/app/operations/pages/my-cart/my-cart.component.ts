@@ -49,6 +49,8 @@ notes: any;
         notes : this.notes
     }
    this.doctorService.checkout(data).subscribe((res:any) => {
+      localStorage.removeItem('CartNum')
+      this.doctorService.$cartNum.set(0)
       this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -64,7 +66,9 @@ notes: any;
       { items.splice(index,1)
        return [...items]}
       );
-     product.favorite = true
+      product.favorite = true
+      this.doctorService.$cartNum.update(val=> val -1)
+      localStorage.setItem('CartNum',this.doctorService.$cartNum().toString())
     this.messageService.add({
           severity: 'success',
           summary: 'Successful',

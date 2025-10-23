@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule, NgSwitch } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { AuthService } from 'app/core/services/auth.service';
+import { DoctorService } from '@operations/services/doctor.service';
 
 @Component({
     selector: 'app-menu',
@@ -17,13 +18,20 @@ import { AuthService } from 'app/core/services/auth.service';
     </ul> `
 })
 export class AppMenu {
-    model: any[] = [];
+    model = []
     authService = inject(AuthService)
+    doctorService = inject(DoctorService)
     role =this.authService.userRole
+    cardNum = this.doctorService.$cartNum
+
+  updateMenuBadge = effect(() => {
+    const myCart = this.model[0]?.items?.find(i => i.label === 'My Cart');
+    if (myCart) {
+      myCart.badge.value = this.cardNum();
+    }
+  });
 
     ngOnInit() {
-        console.log(this.role);
-        
         switch (this.role) {
             case "supplier":
                      this.model = [
@@ -60,7 +68,7 @@ export class AppMenu {
                                 { label: 'Current Orders', icon: 'pi pi-fw pi-send', routerLink: ['/operations/current-orders'],badge:{severity:"primary",value:"3"} },
                                 { label: 'Orders', icon: 'pi pi-fw pi-list', routerLink: ['/operations/orders'] },
                                 { label: 'Shopping', icon: 'pi pi-cart-arrow-down', routerLink: ['/operations/shopping'] },
-                                { label: 'My Cart', icon: 'pi pi-shopping-cart', routerLink: ['/operations/my-cart'],badge:{severity:"primary",value:"3"} },
+                                { label: 'My Cart', icon: 'pi pi-shopping-cart', routerLink: ['/operations/my-cart'],badge:{severity:"primary",value: this.cardNum()} },
                                 { label: 'Packages', icon: 'pi pi-shopping-bag', routerLink: ['/operations/packages'] },
                                 { label: 'Store', icon: 'pi pi-fw pi-shop', routerLink: ['/operations/store']},
                                 { label: 'Receipts', icon: 'pi pi-fw pi-receipt', routerLink: ['/operations/receipts']},
@@ -74,6 +82,7 @@ export class AppMenu {
                 break;
         }
 
-       
+    
     }
 }
+

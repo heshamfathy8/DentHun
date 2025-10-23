@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from 'environments/environment';
 
 @Injectable({
@@ -7,6 +7,8 @@ import { environment } from 'environments/environment';
 })
 export class DoctorService {
   baseUrl = environment.apiUrl
+  cartNumStorage = +(localStorage.getItem('CartNum') ?? 0)
+  $cartNum = signal(this.cartNumStorage)
   user;
   constructor(
     private httpClient: HttpClient,
@@ -41,6 +43,10 @@ export class DoctorService {
     }
    getDoctorDetails(id){
         let url = this.baseUrl+`report/doctor/${id}/details`
+        return this.httpClient.get(url);
+    }
+   getProduct(id){
+        let url = this.baseUrl+`product/show/` + id
         return this.httpClient.get(url);
     }
    getCardProducts(){

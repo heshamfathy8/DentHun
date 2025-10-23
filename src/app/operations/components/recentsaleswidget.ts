@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { map } from 'rxjs';
+import { Component, inject } from '@angular/core';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '@login/services/product.service';
+import { SupplierService } from '@operations/services/supplier.service';
 
 @Component({
     standalone: true,
@@ -15,37 +17,42 @@ import { ProductService } from '@login/services/product.service';
             <ng-template #header>
                 <tr>
                     <th>Image</th>
-                    <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                    <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+                    <th >Name </th>
+                    <th >Price </th>
                     <th>Doctor</th>
                     <th>Date</th>
                 </tr>
             </ng-template>
             <ng-template #body let-product>
                 <tr>
-                    <td style="width: 15%; min-width: 5rem;">
-                        <img src="https://primefaces.org/cdn/primevue/images/product/{{ product.image }}" class="shadow-lg" alt="{{ product.name }}" width="50" />
+                    <td >
+                        <img [src]="product.img " class="shadow-lg" alt="{{ product.name }}" width="50" />
                     </td>
-                    <td style="width: 35%; min-width: 7rem;">{{ product.name }}</td>
-                    <td style="width: 25%; min-width: 8rem;">{{ product.price | currency: 'USD' }}</td>
-                    <td style="width: 25%;">
-                       hesham
+                    <td>{{ product.doctor_name }}</td>
+                    <td >{{ product.price  }}</td>
+                    <td>
+                       {{ product.name }}
                     </td>
-                    <td style="width: 15%;">
-                       7/5/2025
+                    <td >
+                       {{ product.date }}
                     </td>
                 </tr>
             </ng-template>
         </p-table>
     </div>`,
-    providers: [ProductService]
 })
 export class RecentSalesWidget {
+
+    private readonly supplierService = inject(SupplierService)
     products!: any[];
 
-    constructor(private productService: ProductService) {}
-
     ngOnInit() {
-        this.productService.getProductsSmall().then((data) => (this.products = data));
+        this.supplierService.getOrders({page:1}).subscribe((res) => 
+        {
+            console.log(res['data'])
+            this.products =  res['data'].flatMap(order => order.products.map((product:any)=> ({...product , doctor_name: order.name , date: order.created_at  })))
+
+         }   
+    );
     }
 }

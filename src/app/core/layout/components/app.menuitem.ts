@@ -42,7 +42,7 @@ import { BadgeModule } from 'primeng/badge';
                 <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
                 <div class="ml-auto">
-                    <p-badge  [value]="item.badge['value']" [severity]="item.badge['severity']" *ngIf="item.badge" ></p-badge>
+                    <p-badge  [value]="item.badge['value']" [severity]="item.badge['severity']" *ngIf="item.badge?.['value']" ></p-badge>
                     <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
                 </div>
             </a>

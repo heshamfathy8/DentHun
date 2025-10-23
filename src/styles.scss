@@ -124,6 +124,19 @@ p-checkbox .p-checkbox{
   min-height: 60px;
 }
 
+.p-tieredmenu .p-tieredmenu-item:not(.p-disabled) > .p-tieredmenu-item-content:hover .p-tieredmenu-item-icon {
+    color: unset ;
+}
+.p-tieredmenu .p-tieredmenu-item-icon{
+   color: unset ;
+}
+div .p-tieredmenu{
+  border: none;
+}
+.p-tieredmenu-submenu{
+  border: unset;
+}
+
 // animation
 @keyframes slideDown {
   to {

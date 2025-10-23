@@ -74,14 +74,16 @@ addToCard(product){
   let data = {
     product_id: product.id,
 }
-product.is_added = true
-   this.doctorService.addToCard(data).subscribe((res) => {
+this.doctorService.addToCard(data).subscribe((res) => {
+     product.is_added = true
     this.messageService.add({
           severity: 'success',
           summary: 'Successful',
           detail: 'Product added to Card',
           life: 3000
     });
+    this.doctorService.$cartNum.update(val => val + 1)
+    localStorage.setItem('CartNum',this.doctorService.$cartNum().toString())
   });
 }  
 getCategories(){

@@ -22,6 +22,9 @@ import { FloatlabelDatepickerTypeComponent } from '@shared/components/formly-cus
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { errorInterceptor } from '../../error.interceptor';
 import { Intercepter } from './core/interceptors/interceptor';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideMessaging, getMessaging } from '@angular/fire/messaging';
+import { environment } from 'environments/environment.prod';
 
 export function httpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -30,6 +33,8 @@ const AllRoutes = [...routes]
 
 export const appConfig: any = {
   providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+  provideMessaging(() => getMessaging()),
   importProvidersFrom(
     BrowserAnimationsModule,
     ReactiveFormsModule,
@@ -58,8 +63,11 @@ export const appConfig: any = {
     FormlyPrimeNGModule,
     FormlyInputModule,
     MultiSelectModule,
-  ),
 
+  ),
+  
+ 
+ 
   MessageService,
   ConfirmationService,
   { provide: HTTP_INTERCEPTORS, useClass: Intercepter, multi: true },
@@ -79,6 +87,10 @@ export const appConfig: any = {
     anchorScrolling: 'enabled',
     scrollPositionRestoration: 'enabled'
   }), withEnabledBlockingInitialNavigation()),
+
+  importProvidersFrom(
+     
+    ),
 
   providePrimeNG({
     theme: {

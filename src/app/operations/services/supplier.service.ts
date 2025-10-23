@@ -16,6 +16,10 @@ export class SupplierService {
     private auth: AuthService,
   ) {}
 
+  sendFCMToken(data:any){
+    let url = this.baseUrl+'profile/update-fcmToken'
+    return this.httpClient.post(url,data);
+  }
   addProduct(data:any){
     let url = this.baseUrl+'product/store'
     return this.httpClient.post(url,data);
@@ -200,6 +204,10 @@ export class SupplierService {
        let url = this.baseUrl+'order/all-delivered'
         return this.httpClient.get(url ,{params});
     }
+    getٌBestSalesProducts(){ 
+       let url = this.baseUrl+'receipt/index'
+        return this.httpClient.get(url);
+    }
     getٌReceits(page){ 
        let url = this.baseUrl+'receipt/index?page=' + page
         return this.httpClient.get(url);
@@ -218,6 +226,10 @@ export class SupplierService {
     }
     getCurrentOrders(page){
        let url = this.baseUrl+'order/index-type?page=' + page
+        return this.httpClient.get(url);
+    }
+    getDashboard(){
+       let url = this.baseUrl+'statistic'
         return this.httpClient.get(url);
     }
  

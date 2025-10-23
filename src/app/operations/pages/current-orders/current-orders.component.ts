@@ -130,7 +130,6 @@ loadData(page=1){
         this.orders.set(res['data']);
         this.totalRecords = res.meta.total
     });
-  
 }
 
 }
