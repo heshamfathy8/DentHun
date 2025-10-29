@@ -4,6 +4,7 @@ import { CrudComponent } from '@shared/pages/crud/crud.component';
 import { AuthService } from 'app/core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { DoctorService } from '@operations/services/doctor.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class CurrentPaymentsComponent {
  doctorService = inject(DoctorService)
  authService = inject(AuthService)
  message = inject(MessageService)
+ router = inject(Router)
  payments = signal([])
  role =  this.authService.userRole
  cols;
@@ -47,6 +49,7 @@ DataChange(event){
 }
 loadData(){
     this.doctorService.getCurrentPayments().subscribe((res:any) => {
+      
       res.data.forEach(item => {
         item.paid = item.requested_paid ?? item.paid
       });

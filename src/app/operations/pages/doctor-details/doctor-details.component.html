@@ -34,7 +34,12 @@
               Working Hours:
             </p>
             <ul class=" text-sm list-disc pl-5 space-y-1 ">
-              <li>Sunday - Thursday: 9:00 AM - 5:00 PM</li>
+             <li *ngFor="let item of doctor?.schedules">
+                <span class="me-2">{{ item?.day_name }} :</span>
+                <span > {{ item.from }} </span>
+                <span class="mx-3">- </span>
+                <span >{{ item.to }}</span>
+              </li>
               <!-- <li>Friday & Saturday: Closed</li> -->
             </ul>
           </div>

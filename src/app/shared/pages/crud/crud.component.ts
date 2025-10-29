@@ -239,7 +239,7 @@ log(product){
     }
     onConfirm(product: Product , index) {
         this.confirmationService.confirm({
-            message: 'Are you sure you want to reject ' + product.name + '?',
+            message: 'Are you sure you want to confirm ' + product.name + '?',
             header: 'Confirm',
             icon: 'pi pi-check-circle',
              acceptButtonProps: {

@@ -202,6 +202,13 @@ export const routes: Routes = [
                 '@operations/pages/create-package/create-package.component'
               ).then((m) => m.CreatePackageComponent),
           },
+          {
+            path: 'refound-orders',
+            loadComponent: () =>
+              import(
+                '@operations/pages/refound-orders/refound-orders.component'
+              ).then((m) => m.RefoundOrdersComponent),
+          },
        
         ],
       },

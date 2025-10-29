@@ -65,9 +65,6 @@ export const appConfig: any = {
     MultiSelectModule,
 
   ),
-  
- 
- 
   MessageService,
   ConfirmationService,
   { provide: HTTP_INTERCEPTORS, useClass: Intercepter, multi: true },

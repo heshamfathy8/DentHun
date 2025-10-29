@@ -49,7 +49,8 @@ export class AppMenu {
                                 { label: 'Store', icon: 'pi pi-fw pi-shop', routerLink: ['/operations/store']},
                                 { label: 'Packages', icon: 'pi pi-shopping-bag', routerLink: ['/operations/packages'] },
                                 { label: 'Receipts', icon: 'pi pi-fw pi-receipt', routerLink: ['/operations/receipts']},
-                                { label: 'Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/operations/reports']},
+                                { label: 'refound-orders', icon: 'pi pi-fw pi-sync', routerLink: ['/operations/refound-orders']},
+                                // { label: 'Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/operations/reports']},
                                 ]
                             },
                         ];
@@ -72,7 +73,7 @@ export class AppMenu {
                                 { label: 'Packages', icon: 'pi pi-shopping-bag', routerLink: ['/operations/packages'] },
                                 { label: 'Store', icon: 'pi pi-fw pi-shop', routerLink: ['/operations/store']},
                                 { label: 'Receipts', icon: 'pi pi-fw pi-receipt', routerLink: ['/operations/receipts']},
-                                { label: 'Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/operations/reports']},
+                                // { label: 'Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/operations/reports']},
                                 ]
                             },
                         ];

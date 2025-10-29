@@ -82,6 +82,20 @@ export class SupplierService {
         let url = this.baseUrl+'profile/show'
         return this.httpClient.get(url);
     }
+  getRefoundOrders(){
+        let url = this.baseUrl+'order/refund'
+        return this.httpClient.get(url);
+    }
+  changeRefoundOrdersStatus(item,data){
+    console.log(item.is_order);
+    
+    let url =
+    item.is_order ?
+     this.baseUrl+'order/update-status/' + item.id
+     :this.baseUrl+`order/${item.id}/update-status`
+        return this.httpClient.post(url,data);
+    }
+ 
   getNotifications(){
         let url = this.baseUrl+'notification/user'
         return this.httpClient.get(url);
@@ -165,6 +179,8 @@ export class SupplierService {
       return this.httpClient.get(url);
     }
   deleteOrder(order){
+    console.log(order);
+    
     let url =
      order.created_at
      ? this.baseUrl+'order/delete/' + order.id 

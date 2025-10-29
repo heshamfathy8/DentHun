@@ -5,13 +5,13 @@ export const environment = {
   mediaUrl: 'https://dental-link.azda-cs.com/storage/',
   
   firebase: {
- apiKey: "AIzaSyDlvoBcww7ykAepqIpU2Dl6Kk330OlGD7w",
-  authDomain: "denthub-d6def.firebaseapp.com",
-  projectId: "denthub-d6def",
-  storageBucket: "denthub-d6def.firebasestorage.app",
-  messagingSenderId: "645591146559",
-  appId: "1:645591146559:web:cf14218216f500948cd88a",
-  measurementId: "G-J6KNE0SL4X"
+   apiKey: "AIzaSyBeMojZejk00rGUQat1EdkslWKeloWpRCg",
+  authDomain: "denthub-52578.firebaseapp.com",
+  projectId: "denthub-52578",
+  storageBucket: "denthub-52578.firebasestorage.app",
+  messagingSenderId: "36728579705",
+  appId: "1:36728579705:web:02ecdd7966ce5494f4d6a8",
+  measurementId: "G-VJY6S0WXFH"
 },
-vapidKey: "BGoPnbAqOKwsu_xvJe4cPWgN0ectnRR_EXy3CWBV8Iw8NqAIpYuU8wAjeA8zqDpo1LQJt6wBdaGGyjhOSO-zhYk" // هنجيبه بعدين
+vapidKey: "BD91YzZJQsE2sV43w-g2LAlsPv9-OueeUQsEVZiw25Tz7azDbpTdulj2nyzH3XfafSxCZg8pAKDQAdo8Fs_fzOY" // هنجيبه بعدين
 };

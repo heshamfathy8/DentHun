@@ -103,11 +103,8 @@ markAsFavorite(product , index){
   });
 }  
 addToCard(product,index){
-  let data = {
-  "notes": "يرجى التوصيل بعد الساعة 5 مساءً",
-  "payment_method": "مدفوعات" // "الكترونى" , "كاش" , مدفوعات
-}
-   this.doctorService.addPackageToCard(product.id ,data).subscribe((res) => {
+ 
+   this.doctorService.addPackageToCard(product.id ).subscribe((res) => {
     this.message.add({
           severity: 'success',
           summary: 'Successful',

@@ -81,9 +81,9 @@ export class DoctorService {
       let url = this.baseUrl+'cart/store'
       return this.httpClient.post(url , body);
     }
-    addPackageToCard(id ,data){
+    addPackageToCard(id ){
       let url = this.baseUrl+'package/buy/' + id
-      return this.httpClient.post(url,data);
+      return this.httpClient.post(url,{});
     }
     markAsFavorite(id){
          let url = this.baseUrl+'favorite-product/add/' + id

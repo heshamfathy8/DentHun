@@ -52,7 +52,7 @@ ngAfterViewInit(){
     switch (event.name) {
       case 'delete order':
         this.deleteOrder(event.order,event.index)
-        console.log(event.product);
+        console.log(event.order);
         break;
 
       case 'add':
@@ -116,7 +116,7 @@ onSearch() {
     })
 }
 deleteOrder(order,index){
-  this.supplierService.deleteOrder(order.id).subscribe(res=>{
+  this.supplierService.deleteOrder(order).subscribe(res=>{
     this.products().splice(index,1)
   })
 }   

@@ -19,6 +19,7 @@ import { DatePickerModule } from 'primeng/datepicker';
     [dataType]="to['dataType']"
     iconDisplay="input"
     [showButtonBar]="true"
+    inputStyleClass="w-full"
     class="w-full"
     appendTo="body"
   ></p-datepicker>

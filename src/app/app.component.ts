@@ -1,12 +1,10 @@
 import { Component, OnInit, inject, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MessagingService } from './services/messaging.service';
 import { Messaging, onMessage } from '@angular/fire/messaging';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { getToken } from 'firebase/messaging';
 import { environment } from '../environments/environment';
-import { AuthService } from './core/services/auth.service';
 import { SupplierService } from '@operations/services/supplier.service';
 
 @Component({
@@ -17,7 +15,7 @@ import { SupplierService } from '@operations/services/supplier.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService,private router: Router) {
     this.translate.setDefaultLang('ar');
     this.translate.use('ar');
   }
@@ -28,27 +26,34 @@ export class AppComponent implements OnInit {
   private ngZone = inject(NgZone);
   private supplierService = inject(SupplierService);
 
-  ngOnInit() {
-    this.checkNotificationPermission();
+ ngOnInit() {
 
-    // استماع للرسائل أثناء عمل التطبيق (Foreground)
-    onMessage(this.messaging, (payload) => {
-      this.ngZone.run(() => {
-        console.log('📨 Message received:', payload);
-        alert(`${payload.notification?.title}: ${payload.notification?.body}`);
-      });
-    });
-
-    // تسجيل الـ service worker (مهم جداً)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/firebase-messaging-sw.js')
-        .then((registration) => {
-          console.log('✅ Service Worker registered:', registration.scope);
-        })
-        .catch((err) => console.error('❌ SW registration failed:', err));
-    }
+  // لو عندك إذن بالفعل هات التوكن مباشرة
+  if (Notification.permission === 'granted') {
+    this.getToken();
   }
+
+  // استقبال رسائل foreground
+  onMessage(this.messaging, (payload) => {
+    this.ngZone.run(() => {
+      console.log('📨 Message received:', payload);
+
+      const userConfirmed = confirm(`${payload.notification?.title}: ${payload.notification?.body}`);
+
+      if (userConfirmed) {
+        this.router.navigate([payload.data?.['click_action']]);
+      }
+    });
+  });
+
+  // تأكد إن Service Worker مسجل
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/firebase-messaging-sw.js')
+      .then(reg => console.log('✅ SW registered:', reg.scope))
+      .catch(err => console.error('❌ SW registration failed:', err));
+  }
+}
 
   // ✅ يتأكد من الإذن قبل طلبه
   async checkNotificationPermission() {
@@ -70,6 +75,7 @@ export class AppComponent implements OnInit {
   async requestPermission() {
     try {
       console.log('🟡 Requesting permission...');
+      
       const permission = await Notification.requestPermission();
 
       if (permission === 'granted') {
@@ -111,4 +117,6 @@ export class AppComponent implements OnInit {
     this.supplierService.sendFCMToken(data).subscribe(res=>{console.log('tiken sent successfully');
     })
   }
+
+
 }

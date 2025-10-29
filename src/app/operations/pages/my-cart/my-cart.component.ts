@@ -42,7 +42,7 @@ notes: any;
     let data ={
       products : this.products().map(item => 
         ({
-          id : item.id,
+          id : item.product_id,
           quantity : item.amount(),
         })
       ),

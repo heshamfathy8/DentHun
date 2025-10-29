@@ -57,7 +57,8 @@
                     <div class="flex flex-col sm:flex-row items-center justify-center  gap-3 w-full md:w-auto">
                         <!-- Date range picker -->
                         <p-datepicker
-                        class="w-full sm:w-64"
+                        class="sm:w-64"
+                        inputStyleClass="sm:w-64"
                         [(ngModel)]="product.rangeDate"
                         placeholder="Date Range"
                         showIcon
@@ -99,7 +100,7 @@
                           <p-sortIcon field="{{col.field}}"  *ngIf="col.field"/>
                       </th>
                     }
-                    <th style="min-width: 12rem"></th>
+                    <th  style="min-width: 12rem"></th>
                 </tr>
             </ng-template>
             <ng-template #body let-product let-index="rowIndex">
@@ -116,7 +117,7 @@
                     <td class="text-base"*ngIf="product.price">{{ product.price  }} </td>
                     <td  *ngIf="product.quantity">{{ product.quantity }}</td>
                      <!-- payments -->
-                     <td *ngIf="product.paid" >{{ product.paid }}</td>
+                     <td *ngIf="product.paid != null" >{{ product.paid }}</td>
                      <!-- payments -->
                     <td *ngIf="product.date" >{{ product.date }}</td>
                     <td *ngIf="product.category_name">{{ product.category_name }}</td>
@@ -128,7 +129,7 @@
                     </td>
 
                    
-                    <td *ngIf="product.remaining" >{{ product.remaining }}</td>
+                    <td *ngIf="product.remaining != null">{{ product.remaining }}</td>
                      <!-- payments -->
                     
                     <td>
@@ -223,6 +224,7 @@
                                         [dataType]="'string'"
                                         iconDisplay="input"
                                         (ngModelChange)="log(product)"
+                                        inputStyleClass="w-full"
                                         [showButtonBar]="true"
                                         class="w-full"
                                         appendTo="body"

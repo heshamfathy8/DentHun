@@ -1,3 +1,4 @@
+import { DoctorService } from '@operations/services/doctor.service';
 import { SupplierService } from './../../services/supplier.service';
 import { Component, inject, Input, signal, ViewChild } from '@angular/core';
 import { CrudComponent } from '@shared/pages/crud/crud.component';
@@ -16,6 +17,7 @@ import { debounceTime, Subject, switchMap } from 'rxjs';
 })
 export class PaymentsComponent {
   private readonly supplierService = inject(SupplierService)
+  private readonly DoctorService = inject(DoctorService)
   private readonly messageService = inject(MessageService)
   private readonly authService = inject(AuthService)
 
@@ -29,10 +31,8 @@ export class PaymentsComponent {
 
 @ViewChild('Crud') crud!: CrudComponent;
  ngOnInit() {
-   console.log('paymennnnnnnnnnnt');
-  console.log(this.filter);
-  
   this.setColumns()
+  this.loadData({page:1})
   this.getDoctors()
    this.search()
     
@@ -75,14 +75,9 @@ DataChange(event){
 
 }
 getDoctors(){
-  this.doctors =[
-    {name : 'hesham' , id : 1},
-    {name : 'hesham' , id : 2},
-    {name : 'hesham' , id : 3},
-  ]
-  //  this.supplierService.getPayments(page).subscribe((res) => {
-  //       this.products.set(res['data']);
-  //   });
+   this.DoctorService.getDoctors({page:1}).subscribe((res) => {
+        this.doctors = res['data']
+    });
 }
 setColumns(){
   this.cols = [
@@ -95,6 +90,8 @@ setColumns(){
 loadData(filter){
     this.filter = {...this.filter , ...filter}
     this.supplierService.getPayments(this.filter).subscribe((res) => {
+      console.log(res['data']);
+      
         this.products.set(res['data']);
         this.totalRecords = res['meta'].total
     });

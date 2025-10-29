@@ -41,13 +41,13 @@ import { AuthService } from 'app/core/services/auth.service';
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">{{user_stats}}</span>  <!--Customers-->
-                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{stats?.total_suppliers}}</div>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{stats?.total_users}}</div>
                     </div>
                     <div class="flex items-center justify-center bg-cyan-100 dark:bg-cyan-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
                         <i class="pi pi-users text-cyan-500 !text-xl"></i>
                     </div>
                 </div>
-                <span class="text-primary font-medium">{{stats?.suppliers_dealt_with}} </span>
+                <span class="text-primary font-medium">{{stats?.users_dealt_with}} </span>
                 <span class="text-muted-color">newly registered</span>
             </div>
         </div>

@@ -38,7 +38,7 @@ Cities = [{
   name : 'port',
   id : 333,
 }]
-workingHours: any;
+// workingHours: any;
 constructor(
     private loginService: LoginService,
     private router: Router,
@@ -68,7 +68,7 @@ constructor(
     })
   }
   getCites(){
-     this.loginService.getRoles().subscribe({
+     this.loginService.getCites().subscribe({
       next:(res:any)=>{
         this.Cities = res.data
       },
